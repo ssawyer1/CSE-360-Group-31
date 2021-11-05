@@ -1,69 +1,72 @@
 package application;
 
-import java.io.FileInputStream; 
-import java.io.FileNotFoundException;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.layout.*;
-import javafx.scene.control.TableView;
-
-import javafx.scene.text.*;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class Login extends Application
 {
-	@Override
 	public void start(Stage stage) throws Exception
 	{
 		// set stage size
 		stage.setHeight(900);
 		stage.setWidth(1300);
 		
-		// create tabs and initialize panes
-		Tab portal = new Tab("   Patient Portal");
-	    Tab tab1 = new Tab("\t\t\t\t   Contact Information"); // tabbed to center	
-	    Tab tab2 = new Tab("\t\t\t\t\tPatient Visits"); // tabbed to center
-	    Tab tab3 = new Tab("\t\t\t\t\t    Messages"); // tabbed to center
-	    portal.setDisable(true); // disable portal table 
-	    tab1.setContent(infoPane()); // set pane
-	    tab2.setContent(visitsPane()); // set pane
-	    tab3.setContent(messagePane()); // set pane
-	    
-	    // format tabs
-        tab1.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
-        tab2.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
-        tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
-	    portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
-	    
-	   // create tab pane
-	    TabPane tabPane = new TabPane();
-	    tabPane.getTabs().addAll(portal, tab1, tab2, tab3); // add children
-	    tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
-	    tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
+		VBox innerPane = new VBox();
+		innerPane.setStyle("-fx-background-color: white"); // set background of vbox
+	    innerPane.setPadding(new Insets(30, 60, 30, 60));
+	    innerPane.setSpacing(25);
+		
+		Text title = new Text("Login to Patient Portal");
+		title.setFont(Font.font("Courier", 30));
+		
+		Text username = new Text("Username");
+		username.setFont(Font.font("Courier", 20));
+		
+		TextArea user = new TextArea();
+		user.setFont(Font.font("Courier", 20));
+		user.setStyle("-fx-text-fill: gray");
+		user.setMaxHeight(20);
+		
+		Text password = new Text("Password");
+		password.setFont(Font.font("Courier", 20));
+		
+		TextArea pass = new TextArea();
+		pass.setFont(Font.font("Courier", 20));
+		pass.setStyle("-fx-text-fill: gray");	
+		pass.setMaxHeight(20);
+		
+		Button submit = new Button("Login");
+		submit.setStyle("-fx-background-radius: 5; -fx-background-color: rgb(" + 61 + "," + 138 + "," + 247 + ");; -fx-text-fill: white; ");
+		submit.setMinWidth(200);
+		submit.setFont(Font.font("Courier",20));
+		
+		Hyperlink signup = new Hyperlink("Create Account");
+		signup.setFont(Font.font("Courier", 20));
+		signup.setStyle("-fx-text-fill: rgb(" + 61 + "," + 138 + "," + 247 + ");");
+		
+		innerPane.getChildren().addAll(title, username, user, password, pass, submit, signup);
 		
 	    // layout the stage.
-	    VBox box = new VBox(10); // create vbox 
-	    box.getChildren().add(tabPane); // add tab pane to vbox
-	    VBox.setVgrow(tabPane, Priority.ALWAYS);
-	    box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;"); // set background of vbox
+	    BorderPane box = new BorderPane(); // create vbox 
+	    box.setCenter(innerPane); // add tab pane to vbox
+	    box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); ");
+	    box.setPadding(new Insets(175, 250, 175, 250));
 	    Scene scene = new Scene(box);
 	    stage.setScene(scene);
 	    stage.show();
+	}
+	
+	public static void main(String[] args)
+	{
+		Application.launch(args);
 	}
 }
