@@ -1,21 +1,26 @@
 package application;
 
 public class Appointment {
-	private String date = " ";
-	private String description = " ";
+	private String date;
+	private String reason;
+	private String notes;
 	Appointment(){}
-	public Appointment(String date, String description)
+	public Appointment(String date, String reason, String notes)
 	{
 		this.date = date;
-		this.description = description;
+		this.reason = reason;
+		this.notes = notes;
 	}
 	public String getDate()
 	{
-		return date;
+		return this.date;
 	}
-	public String getDescription()
+	public String getReason()
 	{
-		return description;
+		return this.reason;
 	}
-
+	public String getNotes()
+	{
+		return this.notes;
+	}
 }

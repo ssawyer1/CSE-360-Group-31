@@ -68,7 +68,7 @@ public class Main extends Application {
 		pass.setFont(Font.font("Courier", 20));
 		pass.setStyle("-fx-text-fill: gray");	
 		pass.setMaxHeight(20);	
-		
+			
 		login = new Button("Login");
 		login.setStyle("-fx-background-radius: 5; -fx-background-color: rgb(" + 61 + "," + 138 + "," + 247 + ");; -fx-text-fill: white; ");
 		login.setMinWidth(200);
@@ -103,9 +103,12 @@ public class Main extends Application {
 			if (user.getText().equals("Doctor") && pass.getText().equals("Doctor"))
 			{
 				stage.setScene(dp.doctorScene());
-			}
-			
+			}			
 		}
+	}
+	public void setStage()
+	{
+		stage.setScene(loginScene());
 	}
 	public static void main(String[] args) {
 		launch(args);

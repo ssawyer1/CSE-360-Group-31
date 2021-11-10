@@ -99,8 +99,8 @@ public class PatientPortal extends Main{
 		column2.setResizable(false);	
 		visitsTable.getColumns().add(column2);
 		
-		visitsTable.getItems().add(new Appointment("Date here", "Appointment description here"));
-		visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here"));
+		visitsTable.getItems().add(new Appointment("Date here", "Appointment description here", "Patient Notes Here"));
+		visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here", "Additonal Patient Notes Here"));
 		
 		vPane.setCenter(visitsTable);
 		
