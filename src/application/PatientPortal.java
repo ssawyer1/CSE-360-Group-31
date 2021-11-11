@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
@@ -28,7 +30,17 @@ import javafx.scene.text.*;
 public class PatientPortal extends Main{
 	
 	protected Scene patientScene() {		
-
+		
+		//*********************LOG OUT PANE**************************
+		BorderPane logOutPane = new BorderPane();
+		logOutPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
+		Button logOut = new Button("Log Out");
+		logOutPane.setCenter(logOut);
+		logOut.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		        	stage.setScene(loginScene());	    	
+		    }
+		});	
 		//***********************MESSAGE PANE***********************
 		BorderPane msgPane = new BorderPane();
 		msgPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
@@ -177,23 +189,25 @@ public class PatientPortal extends Main{
 		
 	    //***************************Tabs (used to be at the beginning)**********************************
 		Tab portal = new Tab("   Patient Portal");
-		Tab tab1 = new Tab("\t\t\t\t   Contact Information"); // tabbed to center	
-		Tab tab2 = new Tab("\t\t\t\t\tPatient Visits"); // tabbed to center
-		Tab tab3 = new Tab("\t\t\t\t\t    Messages"); // tabbed to center
+		Tab tab1 = new Tab("\t\t\t   Contact Information"); // tabbed to center	
+		Tab tab2 = new Tab("\t\t\t\tPatient Visits"); // tabbed to center
+		Tab tab3 = new Tab("\t\t\t\t    Messages"); // tabbed to center
+		Tab tab4 = new Tab("\t\t\t\t\t Logout");
 		portal.setDisable(true); // disable portal table 
 		tab1.setContent(infoPane); // set pane
 		tab2.setContent(vPane); // set pane
 		tab3.setContent(msgPane); // set pane
-		    
+		tab4.setContent(logOutPane);    
 		    // format tabs
-	    tab1.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
-	    tab2.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
-	    tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
-		portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
+	    tab1.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
+	    tab2.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
+	    tab3.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
+	    tab4.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab4
+		portal.setStyle("-fx-pref-width: 110; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
 		    
 		   // create tab pane
 		TabPane tabPane = new TabPane();
-		tabPane.getTabs().addAll(portal, tab1, tab2, tab3); // add children
+		tabPane.getTabs().addAll(portal, tab1, tab2, tab3, tab4); // add children
 		tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
 			

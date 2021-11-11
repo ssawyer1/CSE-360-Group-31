@@ -27,7 +27,7 @@ import javafx.scene.text.Text;
  */
 
 public class Main extends Application {
-	private Stage stage; //local global varables here
+	protected static Stage stage; //local global varables here
 	private PatientPortal pp; //Object from the other GUI classes to use the methods 
 	private DoctorPortal dp;
 	private Button login;
@@ -40,7 +40,7 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}	
-	private Scene loginScene() { //moved login code to the main
+	protected Scene loginScene() { //moved login code to the main
 		dp = new DoctorPortal();
 		pp = new PatientPortal();
 		Pane root = new Pane();
@@ -105,10 +105,6 @@ public class Main extends Application {
 				stage.setScene(dp.doctorScene());
 			}			
 		}
-	}
-	public void setStage()
-	{
-		stage.setScene(loginScene());
 	}
 	public static void main(String[] args) {
 		launch(args);

@@ -159,15 +159,15 @@ public class DoctorPortal extends Main{
 
 		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);
 		// **********************Logout Pane*********************
-
 		BorderPane logOutPane = new BorderPane();
 		logOutPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
 		Button logOut = new Button("Log Out");
 		logOutPane.setCenter(logOut);
-		
-		
-	   
-		
+		logOut.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		        	stage.setScene(loginScene());	    	
+		    }
+		});	
 		// *************START OF THE TABS CREATION ************
 		Tab portal = new Tab("   Doctor Portal");
 	    Tab tab1 = new Tab("\t\t\t\t   Patients"); // tabbed to center	
@@ -180,7 +180,7 @@ public class DoctorPortal extends Main{
 
 		tab1.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
 		tab2.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
-		tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 30; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
+		tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
 		portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
 			    
 		TabPane tabPane = new TabPane();
