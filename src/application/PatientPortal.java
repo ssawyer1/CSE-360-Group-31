@@ -1,12 +1,10 @@
-package application;
+package application; // javaFX
 
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
@@ -27,20 +25,11 @@ import javafx.scene.layout.*;
 import javafx.scene.control.TableView;
 
 import javafx.scene.text.*;
-public class PatientPortal extends Main{
-	
-	protected Scene patientScene() {		
-		
-		//*********************LOG OUT PANE**************************
-		BorderPane logOutPane = new BorderPane();
-		logOutPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
-		Button logOut = new Button("Log Out");
-		logOutPane.setCenter(logOut);
-		logOut.setOnAction(new EventHandler<ActionEvent>() {
-		    @Override public void handle(ActionEvent e) {
-		        	stage.setScene(loginScene());	    	
-		    }
-		});	
+public class PatientPortal extends Test
+{
+	protected Scene patientScene(Stage stage) 
+	{		
+
 		//***********************MESSAGE PANE***********************
 		BorderPane msgPane = new BorderPane();
 		msgPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
@@ -97,19 +86,24 @@ public class PatientPortal extends Main{
 		//add columns to table
 		TableColumn <Appointment, String> column1 = new TableColumn<>("Date");
 		column1.setCellValueFactory(new PropertyValueFactory<>("date"));
-		
 		column1.setStyle("-fx-alignment: CENTER;");
-		column1.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.3));
+		column1.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.2));
 		column1.setResizable(false);
 		visitsTable.getColumns().add(column1);
 		
 		TableColumn <Appointment, String> column2 = new TableColumn<>("Description");
-		column2.setCellValueFactory(new PropertyValueFactory<>("description"));
-		
+		column2.setCellValueFactory(new PropertyValueFactory<>("reason"));
 		column2.setStyle("-fx-alignment: CENTER;");
-		column2.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.7));
+		column2.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.4));
 		column2.setResizable(false);	
 		visitsTable.getColumns().add(column2);
+		
+		TableColumn <Appointment, String> column3 = new TableColumn<>("Nurse Notes");
+		column3.setCellValueFactory(new PropertyValueFactory<>("notes"));
+		column3.setStyle("-fx-alignment: CENTER;");
+		column3.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.4));
+		column3.setResizable(false);	
+		visitsTable.getColumns().add(column3);
 		
 		visitsTable.getItems().add(new Appointment("Date here", "Appointment description here", "Patient Notes Here"));
 		visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here", "Additonal Patient Notes Here"));
@@ -172,7 +166,7 @@ public class PatientPortal extends Main{
 		Image image; 
 		try 
 		{
-			inputstream = new FileInputStream("C:\\Users\\Sam Sawyer\\OneDrive\\Documents\\College Docs\\_Junior Year 2021\\CSE 360\\avatar2.png"); // file location 
+			inputstream = new FileInputStream("C:\\Users\\Maya\\Data\\System\\Installations\\Eclipse\\javaFX\\avatar2.png"); // file location 
 			image = new Image(inputstream);  // image
 			ImageView view = new ImageView(image); // view image
 			view.setFitHeight(475);  // set size
@@ -189,35 +183,43 @@ public class PatientPortal extends Main{
 		
 	    //***************************Tabs (used to be at the beginning)**********************************
 		Tab portal = new Tab("   Patient Portal");
-		Tab tab1 = new Tab("\t\t\t   Contact Information"); // tabbed to center	
-		Tab tab2 = new Tab("\t\t\t\tPatient Visits"); // tabbed to center
-		Tab tab3 = new Tab("\t\t\t\t    Messages"); // tabbed to center
-		Tab tab4 = new Tab("\t\t\t\t\t Logout");
+		Tab tab1 = new Tab("\t\t\t\t   Contact Information"); // tabbed to center	
+		Tab tab2 = new Tab("\t\t\t\t\tPatient Visits"); // tabbed to center
+		Tab tab3 = new Tab("\t\t\t\t\t    Messages"); // tabbed to center
 		portal.setDisable(true); // disable portal table 
 		tab1.setContent(infoPane); // set pane
 		tab2.setContent(vPane); // set pane
 		tab3.setContent(msgPane); // set pane
-		tab4.setContent(logOutPane);    
+		    
 		    // format tabs
-	    tab1.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
-	    tab2.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
-	    tab3.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
-	    tab4.setStyle("-fx-pref-width: 310; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab4
-		portal.setStyle("-fx-pref-width: 110; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
+	    tab1.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
+	    tab2.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
+	    tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
+		portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
 		    
 		   // create tab pane
 		TabPane tabPane = new TabPane();
-		tabPane.getTabs().addAll(portal, tab1, tab2, tab3, tab4); // add children
+		tabPane.getTabs().addAll(portal, tab1, tab2, tab3); // add children
 		tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
 			
 		    // layout the stage.
+		Button logout = new Button("Logout");
+		logout.setOnAction(e->switchScenes(stage));
+		
 		VBox box = new VBox(10); // create vbox 
-	    box.getChildren().add(tabPane); // add tab pane to vbox
+	    box.getChildren().addAll(logout,tabPane); // add tab pane to vbox
+	    box.setAlignment(Pos.TOP_RIGHT);
 		VBox.setVgrow(tabPane, Priority.ALWAYS);
 		box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;"); // set background of vbox
 		
 		return new Scene(box);
   }
+	
+	private void switchScenes(Stage stage)
+	{
+		HomeScreen home = new HomeScreen();
+		Scene h = home.firstScreen(stage);
+		stage.setScene(h);
+	}
 }
-

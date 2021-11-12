@@ -1,6 +1,6 @@
 package application; // application
 
-import javafx.application.Application;
+import javafx.application.Application; 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,21 +10,17 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javaFX.Login;
 
-public class CreateAccount extends Application
+public class CreateAccount extends Test
 {
-	public void start(Stage stage) throws Exception
+	protected Scene createAccountScene(Stage stage, Scene scene1, String usertype) 
 	{
-		String type = "patient";
-		
-		// set stage size
-		stage.setHeight(900);
-		stage.setWidth(1300);
+		String type = usertype;
 		
 	    ScrollPane create = new ScrollPane();
 		create.setStyle("-fx-background: white;"); // set background of vbox
@@ -82,32 +78,12 @@ public class CreateAccount extends Application
 		ln.setStyle("-fx-text-fill: gray");	
 		ln.setMaxSize(300, 15);
 		
-		Text date = new Text("Date of Birth");
-		date.setFont(Font.font("Courier", 15));
-		
-		TextArea dob = new TextArea("dd/mm/yyyy");
-		dob.setFont(Font.font("Courier", 15));
-		dob.setStyle("-fx-text-fill: gray");	
-		dob.setMaxSize(300, 15);
-		
-		Text gender = new Text("Gender");
-		gender.setFont(Font.font("Courier", 15));
-		
-		TextArea gen = new TextArea("Gender");
-		gen.setFont(Font.font(15));
-		gen.setStyle("-fx-text-fill: gray");	
-		gen.setMaxSize(300, 15);
-		
 		grid.setHgap(25);
 		grid.setVgap(25);
 		grid.add(fname, 0, 0);
 		grid.add(lname, 1, 0);
 		grid.add(fn, 0, 1);
 		grid.add(ln, 1, 1);
-		grid.add(date, 0, 2);
-		grid.add(gender, 1, 2);
-		grid.add(dob, 0, 3);
-		grid.add(gen, 1, 3);
 		
 		Text Email = new Text("Email");
 		Email.setFont(Font.font("Courier", 15));
@@ -120,16 +96,32 @@ public class CreateAccount extends Application
 		Text PhoneNum = new Text("Phone Number");
 		PhoneNum.setFont(Font.font("Courier", 15));
 		
-		TextArea phone = new TextArea("(xxx) xxx - xxxx");
+		TextArea phone = new TextArea("(xxxxxxxxxx");
 		phone.setFont(Font.font("Courier", 15));
 		phone.setStyle("-fx-text-fill: gray");
 		phone.setMaxHeight(15);
 		
-		holder.getChildren().addAll(title, username, user, password, pass, confirm, con, grid);
+		holder.getChildren().addAll(title, username, user, password, pass, confirm, con, grid, Email, em, PhoneNum, phone);
 		
 		
 		if(type.equalsIgnoreCase("patient"))
 		{
+			Text date = new Text("Date of Birth");
+			date.setFont(Font.font("Courier", 15));
+			
+			TextArea dob = new TextArea("dd/mm/yyyy");
+			dob.setFont(Font.font("Courier", 15));
+			dob.setStyle("-fx-text-fill: gray");	
+			dob.setMaxSize(300, 15);
+			
+			Text gender = new Text("Gender");
+			gender.setFont(Font.font("Courier", 15));
+			
+			TextArea gen = new TextArea("Gender");
+			gen.setFont(Font.font(15));
+			gen.setStyle("-fx-text-fill: gray");	
+			gen.setMaxSize(300, 15);
+			
 			Text addressPharm = new Text("Address of Pharmacy");
 			addressPharm.setFont(Font.font("Courier", 15));
 			
@@ -175,14 +167,18 @@ public class CreateAccount extends Application
 			
 			grid2.setHgap(25);
 			grid2.setVgap(25);
-			grid2.add(insuranceCo, 0, 0);
-			grid2.add(GroupNum, 1, 0);
-			grid2.add(co, 0, 1);
-			grid2.add(group, 1, 1);
-			grid2.add(insuredName, 0, 2);
-			grid2.add(InsuredNum, 1, 2);
-			grid2.add(in, 0, 3);
-			grid2.add(inNum, 1, 3);
+			grid2.add(date, 0, 0);
+			grid2.add(gender, 1, 0);
+			grid2.add(dob, 0, 1);
+			grid2.add(gen, 1, 1);
+			grid2.add(insuranceCo, 0, 2);
+			grid2.add(GroupNum, 1, 2);
+			grid2.add(co, 0, 3);
+			grid2.add(group, 1, 3);
+			grid2.add(insuredName, 0, 4);
+			grid2.add(InsuredNum, 1, 4);
+			grid2.add(in, 0, 5);
+			grid2.add(inNum, 1, 5);
 		
 			holder.getChildren().addAll(addressPharm, addr, grid2);
 			
@@ -193,6 +189,7 @@ public class CreateAccount extends Application
 		submit.setStyle("-fx-background-radius: 5; -fx-background-color: rgb(" + 61 + "," + 138 + "," + 247 + ");; -fx-text-fill: white; ");
 		submit.setMinSize(200, 50);
 		submit.setFont(Font.font("Courier",15));
+		submit.setOnAction(e->switchScenes(scene1, stage));
 		
 		holder.getChildren().add(submit);
 		
@@ -205,8 +202,13 @@ public class CreateAccount extends Application
 	    box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); ");
 	    box.setPadding(new Insets(20, 250, 20, 250));
 	    Scene scene = new Scene(box);
-	    stage.setScene(scene);
-	    stage.show();
+	    
+	    return scene;
 	}
 	
+	private void switchScenes(Scene scene, Stage stage)
+	{
+		stage.setScene(scene);
+	}
+
 }
