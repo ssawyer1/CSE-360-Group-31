@@ -27,7 +27,6 @@ public class Doctor
 	
 	// arrays
 	private ArrayList<Patient> patients;
-	private ArrayList<Message> messages;
 	
 	//Default constructor
 	Doctor() {
@@ -41,7 +40,6 @@ public class Doctor
 		this.nurseName = "unassigned";
 		this.nurseUser = "unassigned";
 		patients = new ArrayList<Patient>();
-		messages = new ArrayList<Message>();
 	}
 	
 	// constructor when registering
@@ -57,7 +55,6 @@ public class Doctor
 		this.nurseName = "unassigned";
 		this.nurseUser = "unassigned";
 		patients = new ArrayList<Patient>();
-		messages = new ArrayList<Message>();
 	}
 	
 	public String getFName() {
@@ -132,22 +129,19 @@ public class Doctor
 		this.phoneNumber = newPhone;
 	}
 	
+	public void setActive(boolean status) {
+		this.active = status;
+	}
+	
+	
 	public ArrayList<Patient> getPatients() {
 		return this.patients;
 	}
-	
-	public ArrayList<Message> getMsgs() {
-		return this.messages;
-	}
-	
+
 	public void addPatient(Patient patient) {
 		this.patients.add(patient);
 	}
 	
-	public void addMesaage(LocalDateTime dateCreated, String message) {
-		this.messages.add(new Message(message, dateCreated));
-	}
-
 	public void save() throws IOException
 	{
 		String fileName = ("Doctors/").concat(username).concat(".txt");
@@ -165,13 +159,6 @@ public class Doctor
 		of.println("Email=" + this.email);
 		of.println("Phone=" + this.phoneNumber);
 
-		of.println("MessageNumber=" + this.messages.size());
-		for(int i = 0; i < this.messages.size(); i++)
-		{
-			of.println("Date=" + messages.get(i).getDate());
-			of.println("Message=" + messages.get(i).getMessage());
-		}
-		
 		// close file
 		of.close();
 	}
@@ -193,16 +180,6 @@ public class Doctor
 			this.email = loadProperty(bf, "Email");
 			this.phoneNumber = loadProperty(bf, "Phone");
 			
-			String splitLine[] = (bf.readLine()).split("=");					
-			if(splitLine[0].equalsIgnoreCase("DoctorMessageNumber"))
-			{
-				for(int i = 0; i < Integer.parseInt(splitLine[1]); i++)
-				{
-					messages.add(new Message());
-					messages.get(i).setMessage(loadProperty(bf, "Date"));
-					messages.get(i).setDate(loadProperty(bf, "Message"));
-				}
-			}
 			bf.close();
 		}
 		catch(FileNotFoundException ex)

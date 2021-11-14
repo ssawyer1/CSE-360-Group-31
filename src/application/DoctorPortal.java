@@ -157,17 +157,8 @@ public class DoctorPortal extends Main{
 		BorderPane.setMargin(send, new Insets(20, 0, 20, 0));
 		msgPane.setBottom(send);
 
-		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);
-		// **********************Logout Pane*********************
-
-		BorderPane logOutPane = new BorderPane();
-		logOutPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
-		Button logOut = new Button("Log Out");
-		logOutPane.setCenter(logOut);
-		
-		
+		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);	
 	   
-		
 		// *************START OF THE TABS CREATION ************
 		Tab portal = new Tab("   Doctor Portal");
 	    Tab tab1 = new Tab("\t\t\t\t   Patients"); // tabbed to center	
@@ -182,7 +173,7 @@ public class DoctorPortal extends Main{
 		portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
 			    
 		TabPane tabPane = new TabPane();
-		tabPane.getTabs().addAll(portal, tab1, tab2, tab3); // add children
+		tabPane.getTabs().addAll(portal, tab1, tab2); // add children
 		tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
 			  
@@ -191,7 +182,9 @@ public class DoctorPortal extends Main{
 		
 		VBox box = new VBox(10); // create vbox 
 		box.getChildren().addAll(logout,tabPane); // add tab pane to vbox
+		box.setAlignment(Pos.TOP_RIGHT);
 		VBox.setVgrow(tabPane, Priority.ALWAYS);
+		
 		box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;"); // set background of vbox
 	
 	    return new Scene(box);

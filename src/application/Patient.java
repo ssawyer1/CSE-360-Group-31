@@ -164,7 +164,7 @@ public class Patient
 	}
 	
 	public int getAge() {
-		return this.age;
+		return calcAge(this.dob);
 	}
 	
 	public String getGender() {
@@ -268,12 +268,12 @@ public class Patient
 	}
 	
 	// (LocalDateTime dateCreated, String reason, String docNotes, String nNotes, String hght, String wght, String bp, String temperature)
-	public void addDoctorMsg(LocalDateTime dateCreated, String message) {
-		this.doctorMsgs.add(new Message(message, dateCreated));
+	public void addDoctorMsg(LocalDateTime dateCreated, String message, String senderType, String senderName) {
+		this.doctorMsgs.add(new Message(message, dateCreated, senderType, senderName));
 	}
 	
-	public void addNurseMsg(LocalDateTime dateCreated, String message) {
-		this.nurseMsgs.add(new Message(message, dateCreated));
+	public void addNurseMsg(LocalDateTime dateCreated, String message, String senderType, String senderName) {
+		this.nurseMsgs.add(new Message(message, dateCreated, senderType, senderName));
 	}
 	
 	public void addImmunization(String type, LocalDateTime taken) {
@@ -329,12 +329,16 @@ public class Patient
 		{
 			of.println("Date=" + doctorMsgs.get(i).getDate());
 			of.println("Message=" + doctorMsgs.get(i).getMessage());
+			of.println("SendName=" + doctorMsgs.get(i).getSendName());
+			of.println("SendType=" + doctorMsgs.get(i).getSendType());
 		}
 		of.println("NurseMessageNumber=" + this.nurseMsgs.size());
 		for(int i = 0; i < this.nurseMsgs.size(); i++)
 		{
 			of.println("Date=" + nurseMsgs.get(i).getDate());
 			of.println("Message=" + nurseMsgs.get(i).getMessage());
+			of.println("SendName=" + nurseMsgs.get(i).getSendName());
+			of.println("SendType=" + nurseMsgs.get(i).getSendType());
 		}
 		
 		// appointments
@@ -404,6 +408,8 @@ public class Patient
 					doctorMsgs.add(new Message());
 					doctorMsgs.get(i).setMessage(loadProperty(bf, "Date"));
 					doctorMsgs.get(i).setDate(loadProperty(bf, "Message"));
+					doctorMsgs.get(i).setSendName(loadProperty(bf, "SendName"));
+					doctorMsgs.get(i).setSendType((loadProperty(bf, "SendType")));
 				}
 			}
 			// load nurse messages	
@@ -415,6 +421,8 @@ public class Patient
 					nurseMsgs.add(new Message());
 					nurseMsgs.get(i).setMessage(loadProperty(bf, "Date"));
 					nurseMsgs.get(i).setDate(loadProperty(bf, "Message"));
+					nurseMsgs.get(i).setSendName(loadProperty(bf, "SendName"));
+					nurseMsgs.get(i).setSendType((loadProperty(bf, "SendType")));
 				}
 			}
 			// load appointments

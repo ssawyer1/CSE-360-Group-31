@@ -18,7 +18,6 @@ public class Nurse
 	
 	// arrays
 	private ArrayList<Doctor> doctors;
-	private ArrayList<Message> messages;
 	
 	//Default constructor
 	Nurse() {
@@ -30,7 +29,6 @@ public class Nurse
 		this.email = "";
 		this.active = false;
 		doctors = new ArrayList<Doctor>();
-		messages = new ArrayList<Message>();
 	}
 	
 	// constructor when registering
@@ -44,7 +42,6 @@ public class Nurse
 		this.email = email;
 		this.active = false;
 		doctors = new ArrayList<Doctor>();
-		messages = new ArrayList<Message>();
 	}
 	
 	public String getFName() {
@@ -103,20 +100,16 @@ public class Nurse
 		this.phoneNumber = newPhone;
 	}
 	
+	public void setActive(boolean status) {
+		this.active = status;
+	}
+	
 	public ArrayList<Doctor> getDoctors() {
 		return this.doctors;
 	}
 	
-	public ArrayList<Message> getMsgs() {
-		return this.messages;
-	}
-	
 	public void addDoctor(Doctor doctor) {
 		this.doctors.add(doctor);
-	}
-	
-	public void addMesaage(LocalDateTime dateCreated, String message) {
-		this.messages.add(new Message(message, dateCreated));
 	}
 
 	public void save() throws IOException
@@ -135,13 +128,6 @@ public class Nurse
 		of.println("Email=" + this.email);
 		of.println("Phone=" + this.phoneNumber);
 
-		of.println("MessageNumber=" + this.messages.size());
-		for(int i = 0; i < this.messages.size(); i++)
-		{
-			of.println("Date=" + messages.get(i).getDate());
-			of.println("Message=" + messages.get(i).getMessage());
-		}
-		
 		// close file
 		of.close();
 	}
@@ -161,17 +147,7 @@ public class Nurse
 			this.lName = loadProperty(bf, "LastName");
 			this.email = loadProperty(bf, "Email");
 			this.phoneNumber = loadProperty(bf, "Phone");
-			
-			String splitLine[] = (bf.readLine()).split("=");					
-			if(splitLine[0].equalsIgnoreCase("DoctorMessageNumber"))
-			{
-				for(int i = 0; i < Integer.parseInt(splitLine[1]); i++)
-				{
-					messages.add(new Message());
-					messages.get(i).setMessage(loadProperty(bf, "Date"));
-					messages.get(i).setDate(loadProperty(bf, "Message"));
-				}
-			}
+
 			bf.close();
 		}
 		catch(FileNotFoundException ex)
