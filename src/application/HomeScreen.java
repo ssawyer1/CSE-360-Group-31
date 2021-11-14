@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class HomeScreen extends Test
+public class HomeScreen extends Main
 {
 	private Login log;
 	private Stage stage;

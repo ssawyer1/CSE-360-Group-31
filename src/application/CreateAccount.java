@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class CreateAccount extends Test
+public class CreateAccount extends Main
 {
 	private TextArea user;
 	private TextArea pass;

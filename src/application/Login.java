@@ -20,7 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Login extends Test
+public class Login extends Main
 {
 	private TextArea user;
 	private TextArea pass;

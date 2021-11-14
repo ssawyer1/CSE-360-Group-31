@@ -25,7 +25,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class adminGui extends Test
+public class adminGui extends Main
 {
 	private ArrayList<Patient> Patients;
 	private ArrayList<Nurse> Nurses;

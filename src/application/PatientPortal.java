@@ -25,7 +25,7 @@ import javafx.scene.layout.*;
 import javafx.scene.control.TableView;
 
 import javafx.scene.text.*;
-public class PatientPortal extends Test
+public class PatientPortal extends Main
 {
 	protected Scene patientScene(Stage stage, Patient curPatient) 
 	{		
