@@ -26,9 +26,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class DoctorPortal extends Main{
+public class NursePortal extends Main{
 
-	protected Scene doctorScene(Stage stage, Doctor curDoctor) {
+	protected Scene NurseScene(Stage stage, Nurse curNurse) {
     
 		//**************** Patient Tab *****************
 	/*	BorderPane patientPane = new BorderPane();

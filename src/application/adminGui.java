@@ -1,9 +1,12 @@
-package application;
+package javaFX;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,7 +20,6 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -25,8 +27,15 @@ import javafx.stage.Stage;
 
 public class adminGui extends Test
 {
-	protected Scene adminGuiScene(Stage stage)
+	private ArrayList<Patient> Patients;
+	private ArrayList<Nurse> Nurses;
+	private ArrayList<Doctor> Doctors;
+	protected Scene adminGuiScene(Stage stage, ArrayList<Patient> patients, ArrayList<Nurse> nurses, ArrayList<Doctor> doctors)
 	{
+		Patients = patients;
+		Nurses = nurses;
+		Doctors = doctors;
+		
 		BorderPane fullPane = new BorderPane();
 		
 		Button logout = new Button("Logout");
@@ -83,27 +92,56 @@ public class adminGui extends Test
 		titles.getChildren().addAll(nameTitle, activeTitle, assignTitle);
 		rows.getChildren().add(titles);
 		
-		// for all patients add their name and activity status (checkbox), doctor(dropdown)
-		ArrayList<CheckBox> statuses = new ArrayList<CheckBox>();
-		ArrayList<ComboBox> doctorSelected = new ArrayList<ComboBox>();
-		ArrayList<HBox> patients = new ArrayList<HBox>();
-		ObservableList<String> doctors = FXCollections.observableArrayList("Not Assigned", "Doctor A", "Doctor B");
-		
-		for(int i = 0; i<2; i++) // example
+		// for all patients add their name and activity status (check box), doctor(drop down)
+		ArrayList<CheckBox> statuses = new ArrayList<CheckBox>(); // array of all active statuses of patients
+		ArrayList<ComboBox> doctorSelected = new ArrayList<ComboBox>(); // array of all assigned doctors of patients
+		ArrayList<HBox> patientsAll = new ArrayList<HBox>();
+		ObservableList<String> doctorsAll = FXCollections.observableArrayList("unassigned");
+		for(int i = 0; i < Doctors.size(); i++)
+		{
+			String temp = (Doctors.get(i).getFullName());
+			doctorsAll.add(temp);
+		}
+		for(int i = 0; i<Patients.size(); i++) // example
 		{
 			statuses.add(new CheckBox("active"));
+			statuses.get(i).setSelected(Patients.get(i).getActive());
+			doctorSelected.add(new ComboBox(doctorsAll));
+			doctorSelected.get(i).setValue(Patients.get(i).getDoctorName());
 			
-			doctorSelected.add(new ComboBox(doctors));	
-			doctorSelected.get(i).getSelectionModel().clearAndSelect(0);
+			patientsAll.add(new HBox());
+			patientsAll.get(i).getChildren().addAll(new Text(Patients.get(i).getFullName()),statuses.get(i),doctorSelected.get(i));
+			patientsAll.get(i).setSpacing(400);
 			
-			patients.add(new HBox());
-			patients.get(i).getChildren().addAll(new Text("John Doe"),statuses.get(i),doctorSelected.get(i));
-			patients.get(i).setSpacing(400);
-			
-			rows.getChildren().add(patients.get(i));
+			rows.getChildren().add(patientsAll.get(i));
 		}
 		
 		Button save = new Button("Save"); // set handling, set all patient statuses to check selected and dropdown
+		save.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				for(int i = 0; i < Patients.size(); i++)
+				{
+					Patients.get(i).setActive(statuses.get(i).isSelected());
+					if(doctorSelected.get(i).getSelectionModel().getSelectedIndex() == 0)
+					{
+						Patients.get(i).setDoctorID("unassigned");
+					}
+					else
+					{
+						Patients.get(i).setDoctorID(Doctors.get(doctorSelected.get(i).getSelectionModel().getSelectedIndex()-1).getuser());
+					}
+					try {
+						Patients.get(i).save();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
 		complete.getChildren().addAll(rows, save);		
 		
 		scrollPatient.setContent(complete);

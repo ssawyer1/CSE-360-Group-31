@@ -1,33 +1,52 @@
-package application; // application
+package javaFX; // application
 
-import javafx.application.Application; 
+import java.io.File;
+import java.io.IOException;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class CreateAccount extends Test
 {
+	private TextArea user;
+	private TextArea pass;
+	private TextArea con;
+	private TextArea fn;
+	private TextArea ln;
+	private TextArea em;
+	private TextArea phone;
+	private TextArea dob;
+	private TextArea gen;
+	private TextArea addr;
+	private TextArea co;
+	private TextArea group;
+	private TextArea in;
+	private TextArea inNum;
+	private VBox holder;
+	private Text error;
+	private String type;
+	
 	protected Scene createAccountScene(Stage stage, Scene scene1, String usertype) 
 	{
-		String type = usertype;
+		type = usertype;
 		
 	    ScrollPane create = new ScrollPane();
 		create.setStyle("-fx-background: white;"); // set background of vbox
 	    create.setHbarPolicy(ScrollBarPolicy.NEVER);
 	    create.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 		
-	    VBox holder = new VBox();
+	    holder = new VBox();
 	    holder.setStyle("-fx-background-color: white;"); // set background of vbox
 	    holder.setPadding(new Insets(30, 60, 30, 60));
 	    holder.setSpacing(25);
@@ -38,7 +57,7 @@ public class CreateAccount extends Test
 		Text username = new Text("Username");
 		username.setFont(Font.font("Courier", 15));
 		
-		TextArea user = new TextArea("Username");
+		user = new TextArea();
 		user.setFont(Font.font("Courier", 15));
 		user.setStyle("-fx-text-fill: gray");
 		user.setMaxHeight(15);
@@ -46,7 +65,7 @@ public class CreateAccount extends Test
 		Text password = new Text("Password");
 		password.setFont(Font.font("Courier", 15));
 		
-		TextArea pass = new TextArea("Password");
+		pass = new TextArea();
 		pass.setFont(Font.font("Courier", 15));
 		pass.setStyle("-fx-text-fill: gray");	
 		pass.setMaxHeight(15);
@@ -54,7 +73,7 @@ public class CreateAccount extends Test
 		Text confirm = new Text("Confirm Password");
 		confirm.setFont(Font.font("Courier", 15));
 		
-		TextArea con = new TextArea("Confirm Password");
+		con = new TextArea();
 		con.setFont(Font.font("Courier", 15));
 		con.setStyle("-fx-text-fill: gray");	
 		con.setMaxHeight(15);
@@ -65,15 +84,15 @@ public class CreateAccount extends Test
 		Text fname = new Text("First Name");
 		fname.setFont(Font.font("Courier", 15));
 		
-		TextArea fn = new TextArea("First Name");
+		fn = new TextArea();
 		fn.setFont(Font.font("Courier", 15));
 		fn.setStyle("-fx-text-fill: gray");	
 		fn.setMaxSize(300, 14);
 		
-		Text lname = new Text("Last Name");
+		Text lname = new Text();
 		lname.setFont(Font.font("Courier", 15));
 		
-		TextArea ln = new TextArea("Last Name");
+		ln = new TextArea();
 		ln.setFont(Font.font("Courier", 15));
 		ln.setStyle("-fx-text-fill: gray");	
 		ln.setMaxSize(300, 15);
@@ -88,15 +107,15 @@ public class CreateAccount extends Test
 		Text Email = new Text("Email");
 		Email.setFont(Font.font("Courier", 15));
 		
-		TextArea em = new TextArea("xxxxxxx@xxx.xxx");
+		em = new TextArea();
 		em.setFont(Font.font("Courier", 15));
 		em.setStyle("-fx-text-fill: gray");
 		em.setMaxHeight(15);
 		
-		Text PhoneNum = new Text("Phone Number");
+		Text PhoneNum = new Text("Phone");
 		PhoneNum.setFont(Font.font("Courier", 15));
 		
-		TextArea phone = new TextArea("(xxxxxxxxxx");
+		phone = new TextArea();
 		phone.setFont(Font.font("Courier", 15));
 		phone.setStyle("-fx-text-fill: gray");
 		phone.setMaxHeight(15);
@@ -109,7 +128,7 @@ public class CreateAccount extends Test
 			Text date = new Text("Date of Birth");
 			date.setFont(Font.font("Courier", 15));
 			
-			TextArea dob = new TextArea("dd/mm/yyyy");
+			dob = new TextArea();
 			dob.setFont(Font.font("Courier", 15));
 			dob.setStyle("-fx-text-fill: gray");	
 			dob.setMaxSize(300, 15);
@@ -117,7 +136,7 @@ public class CreateAccount extends Test
 			Text gender = new Text("Gender");
 			gender.setFont(Font.font("Courier", 15));
 			
-			TextArea gen = new TextArea("Gender");
+			gen = new TextArea();
 			gen.setFont(Font.font(15));
 			gen.setStyle("-fx-text-fill: gray");	
 			gen.setMaxSize(300, 15);
@@ -125,7 +144,7 @@ public class CreateAccount extends Test
 			Text addressPharm = new Text("Address of Pharmacy");
 			addressPharm.setFont(Font.font("Courier", 15));
 			
-			TextArea addr = new TextArea("");
+			addr = new TextArea();
 			addr.setFont(Font.font("Courier", 15));
 			addr.setStyle("-fx-text-fill: gray");
 			addr.setMaxHeight(15);
@@ -136,7 +155,7 @@ public class CreateAccount extends Test
 			Text insuranceCo = new Text("Insurance Company");
 			insuranceCo.setFont(Font.font("Courier", 15));
 			
-			TextArea co = new TextArea();
+			co = new TextArea();
 			co.setFont(Font.font("Courier", 15));
 			co.setStyle("-fx-text-fill: gray");	
 			co.setMaxSize(300, 14);
@@ -144,7 +163,7 @@ public class CreateAccount extends Test
 			Text GroupNum = new Text("Group#");
 			GroupNum.setFont(Font.font("Courier", 15));
 			
-			TextArea group = new TextArea();
+			group = new TextArea();
 			group.setFont(Font.font("Courier", 15));
 			group.setStyle("-fx-text-fill: gray");	
 			group.setMaxSize(300, 15);
@@ -152,7 +171,7 @@ public class CreateAccount extends Test
 			Text insuredName = new Text("Insured's Name");
 			insuredName.setFont(Font.font("Courier", 15));
 			
-			TextArea in = new TextArea("Full Name");
+			in = new TextArea();
 			in.setFont(Font.font("Courier", 15));
 			in.setStyle("-fx-text-fill: gray");	
 			in.setMaxSize(300, 15);
@@ -160,7 +179,7 @@ public class CreateAccount extends Test
 			Text InsuredNum = new Text("Insurance Number");
 			InsuredNum.setFont(Font.font("Courier", 15));
 			
-			TextArea inNum = new TextArea("XXXXXXXXX");
+			inNum = new TextArea();
 			inNum.setFont(Font.font(15));
 			inNum.setStyle("-fx-text-fill: gray");	
 			inNum.setMaxSize(300, 15);
@@ -190,8 +209,12 @@ public class CreateAccount extends Test
 		submit.setMinSize(200, 50);
 		submit.setFont(Font.font("Courier",15));
 		submit.setOnAction(e->switchScenes(scene1, stage));
-		
 		holder.getChildren().add(submit);
+		
+		error = new Text();
+		error.setFont(Font.font("Courier", 15));
+		error.setFill(Color.DARKRED);
+		holder.getChildren().add(error);
 		
 		create.setContent(holder);
 
@@ -207,8 +230,57 @@ public class CreateAccount extends Test
 	}
 	
 	private void switchScenes(Scene scene, Stage stage)
-	{
-		stage.setScene(scene);
+	{		
+		// if username exists
+		String fileName = ("Patients/".concat(user.getText()).concat(".txt"));
+		File tempFile = new File(fileName);
+		boolean exists = tempFile.exists();
+		if(exists == true)
+		{
+			error.setText("Username is already in use.");
+		}
+		// iff paswords dont match
+		else if(!pass.getText().equals(con.getText()))
+		{
+			error.setText("Passwords do not match.");
+		}
+		else
+		{
+			if(type.equalsIgnoreCase("patient"))
+			{
+				// create patient object and save
+				Patient newPatient = new Patient(fn.getText(), ln.getText(), user.getText(), pass.getText(), em.getText(), phone.getText(), addr.getText(), dob.getText(), gen.getText(), co.getText(), group.getText(), in.getText(), inNum.getText());
+				try {
+					newPatient.save();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else if(type.equalsIgnoreCase("doctor"))
+			{
+				// create doctor object and save
+				Doctor newDoc = new Doctor(fn.getText(), ln.getText(), user.getText(), pass.getText(), em.getText(), phone.getText());
+				try {
+					newDoc.save();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else if(type.equalsIgnoreCase("nurse"))
+			{
+				// create patient object and save
+				Nurse newNurse = new Nurse(fn.getText(), ln.getText(), user.getText(), pass.getText(), em.getText(), phone.getText());
+				try {
+					newNurse.save();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}			
+			stage.setScene(scene);
+		}
 	}
 
 }
