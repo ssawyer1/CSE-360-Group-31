@@ -1,8 +1,0 @@
-Active=false
-Username=NurseA
-Password=yep
-FirstName=Nancy
-LastName=Brown
-Email=nancy@yahoo.com
-Phone=345456786
-MessageNumber=0
