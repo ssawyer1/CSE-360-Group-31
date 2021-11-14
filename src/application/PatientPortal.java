@@ -25,9 +25,9 @@ import javafx.scene.layout.*;
 import javafx.scene.control.TableView;
 
 import javafx.scene.text.*;
-public class PatientPortal extends Test
+public class PatientPortal extends Main
 {
-	protected Scene patientScene(Stage stage) 
+	protected Scene patientScene(Stage stage, Patient curPatient) 
 	{		
 
 		//***********************MESSAGE PANE***********************
@@ -48,10 +48,10 @@ public class PatientPortal extends Test
 		inbox.setFont(Font.font("Courier", FontWeight.MEDIUM, 30)); 
 		
 		ListView<String> listview = new ListView<String>(); //Listview in middle
-		Message m_obj1 = new Message("Message here");
-		Message m_obj2 = new Message("Another message here");
-		ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
-		listview.setItems(msgList);
+		//Message m_obj1 = new Message("Message here");
+		//Message m_obj2 = new Message("Another message here");
+		//ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
+		//listview.setItems(msgList);
 		
 		Text comp_msg = new Text("Compose Message"); //Text on top
 		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
@@ -105,8 +105,8 @@ public class PatientPortal extends Test
 		column3.setResizable(false);	
 		visitsTable.getColumns().add(column3);
 		
-		visitsTable.getItems().add(new Appointment("Date here", "Appointment description here", "Patient Notes Here"));
-		visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here", "Additonal Patient Notes Here"));
+		//visitsTable.getItems().add(new Appointment("Date here", "Appointment description here", "Patient Notes Here"));
+		//visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here", "Additonal Patient Notes Here"));
 		
 		vPane.setCenter(visitsTable);
 		

@@ -8,7 +8,6 @@ public class Main extends Application
 {
 	private Stage stage;
 	private Scene main;
-	private Login log;
 	private HomeScreen home;
 	
 	public void start(Stage primaryStage) throws Exception

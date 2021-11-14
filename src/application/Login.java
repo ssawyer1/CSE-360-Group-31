@@ -1,5 +1,12 @@
 package application;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -7,27 +14,30 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class Login extends Test
+public class Login extends Main
 {
 	private TextArea user;
 	private TextArea pass;
 	private PatientPortal pp;
 	private DoctorPortal dp;
+	private NursePortal np;
 	private CreateAccount ca;
 	private adminGui ag;
 	private String usertype;
+	private VBox innerPane;
+	private Text error;
 	
 	protected Scene LoginScreen(Stage stage, String userType)
 	{			
 		usertype = userType;
 		
-		VBox innerPane = new VBox();
+		innerPane = new VBox();
 		innerPane.setStyle("-fx-background-color: white");
 		innerPane.setPadding(new Insets(30, 60, 30, 60));
 	    innerPane.setSpacing(25);
@@ -70,7 +80,11 @@ public class Login extends Test
 			signup.setVisible(false);
 		}
 		
-		innerPane.getChildren().addAll(title, username, user, password, pass, login, signup);
+		error = new Text();
+		error.setFont(Font.font("Courier", 15));
+		error.setFill(Color.DARKRED);
+		
+		innerPane.getChildren().addAll(title, username, user, password, pass, login, signup,error);
 		
 		BorderPane box = new BorderPane();
 	    box.setCenter(innerPane); 
@@ -91,23 +105,215 @@ public class Login extends Test
 	{
 		if(switchType.equals("login"))
 		{
-			if (user.getText().equals("Patient") && pass.getText().equals("Patient"))
+			if (usertype.equalsIgnoreCase("patient"))
 			{
-				// check if user type s patient, if it it, check entered text against passwors and usernames of all patients in array (or unil fouond). if not found return invalid. if found but not activated, return, else open 
-				pp = new PatientPortal();
-				Scene patient = pp.patientScene(stage);
-				stage.setScene(patient);
+				// check if username and password is correct
+				String fileName = ("Patients/".concat(user.getText()).concat(".txt"));
+				File tempFile = new File(fileName);
+				boolean exists = tempFile.exists();
+				String tempPass = "";
+				boolean tempActive = false;
+				if(exists == true) // if exists read active and password from file
+				{
+					FileReader fr = null;
+					BufferedReader bf = null;
+					try {
+						fr = new FileReader(fileName);
+						bf = new BufferedReader(fr); // want line 4, 5, 6
+						tempActive = Boolean.parseBoolean(loadProperty(bf, "Active"));
+						bf.readLine();
+						tempPass = loadProperty(bf, "Password");
+						bf.close();
+					}
+					catch(FileNotFoundException ex)
+					{
+						System.out.println(fileName + " not found.");
+					}
+					catch(IOException ex)
+					{
+						System.out.println(ex.toString());
+					} catch (Exception e) {
+						System.out.print("Problem loading Property");
+					}
+					// check password
+					if(!pass.getText().equals(tempPass))
+					{
+						error.setText("Invalid password.");
+					}
+					
+					// check if active
+					else if(tempActive == false)
+					{
+						error.setText("Account not activated. Please come back later.");
+					}
+					else {
+						// load patient
+						Patient loggedInPatient = new Patient();
+						loggedInPatient.load(fileName);
+						pp = new PatientPortal();
+						Scene patient = pp.patientScene(stage, loggedInPatient);
+						stage.setScene(patient);
+					}
+				}
+				else
+				{
+					error.setText("Invalid username.");
+				}
 			}
-			else if (user.getText().equals("Doctor") && pass.getText().equals("Doctor"))
+			if (usertype.equalsIgnoreCase("doctor"))
 			{
-				dp = new DoctorPortal();
-				Scene doctor = dp.doctorScene();
-				stage.setScene(doctor);
+				// check if username and password is correct
+				String fileName = ("Doctors/".concat(user.getText()).concat(".txt"));
+				File tempFile = new File(fileName);
+				boolean exists = tempFile.exists();
+				String tempPass = "";
+				boolean tempActive = false;
+				if(exists == true) // if exists read active and password from file
+				{
+					FileReader fr = null;
+					BufferedReader bf = null;
+					try {
+						fr = new FileReader(fileName);
+						bf = new BufferedReader(fr); // want line 4, 5, 6
+						tempActive = Boolean.parseBoolean(loadProperty(bf, "Active"));
+						bf.readLine();
+						tempPass = loadProperty(bf, "Password");
+						bf.close();
+					}
+					catch(FileNotFoundException ex)
+					{
+						System.out.println(fileName + " not found.");
+					}
+					catch(IOException ex)
+					{
+						System.out.println(ex.toString());
+					} catch (Exception e) {
+						System.out.print("Problem loading Property");
+					}
+					// check password
+					if(!pass.getText().equals(tempPass))
+					{
+						error.setText("Invalid password.");
+					}
+					// check if active
+					else if(tempActive == false)
+					{
+						error.setText("Account not activated. Please come back later.");
+					}
+					else {
+						// load patient
+						Doctor loggedInDoctor = new Doctor();
+						loggedInDoctor.load(fileName);
+						dp = new DoctorPortal();
+						Scene doctor = dp.doctorScene(stage, loggedInDoctor);
+						stage.setScene(doctor);
+					}
+				}
+				else
+				{
+					error.setText("Invalid username.");
+				}
 			}
-			else if (user.getText().equals("Admin") && pass.getText().equals("Admin"))
+			if (usertype.equalsIgnoreCase("nurse"))
 			{
+				// check if username and password is correct
+				String fileName = ("Nurses/".concat(user.getText()).concat(".txt"));
+				File tempFile = new File(fileName);
+				boolean exists = tempFile.exists();
+				String tempPass = "";
+				boolean tempActive = false;
+				if(exists == true) // if exists read active and password from file
+				{
+					FileReader fr = null;
+					BufferedReader bf = null;
+					try {
+						fr = new FileReader(fileName);
+						bf = new BufferedReader(fr); // want line 4, 5, 6
+						tempActive = Boolean.parseBoolean(loadProperty(bf, "Active"));
+						bf.readLine();
+						tempPass = loadProperty(bf, "Password");
+						bf.close();
+					}
+					catch(FileNotFoundException ex)
+					{
+						System.out.println(fileName + " not found.");
+					}
+					catch(IOException ex)
+					{
+						System.out.println(ex.toString());
+					} catch (Exception e) {
+						System.out.print("Problem loading Property");
+					}
+					// check password
+					if(!pass.getText().equals(tempPass))
+					{
+						error.setText("Invalid password.");
+					}
+					
+					// check if active
+					else if(tempActive == false)
+					{
+						error.setText("Account not activated. Please come back later.");
+					}
+					else {
+						// load patient
+						Nurse loggedInNurse = new Nurse();
+						loggedInNurse.load(fileName);
+						pp = new PatientPortal();
+						Scene nurse = np.NurseScene(stage, loggedInNurse);
+						stage.setScene(nurse);
+					}
+				}
+				else
+				{
+					error.setText("Invalid username.");
+				}
+			}
+			else if (user.getText().equals("Admin") && pass.getText().equals("fkj9728f"))
+			{
+				//iterate through all objects in doctors folder
+				File folder = new File("Doctors/");
+				File[] listFiles = folder.listFiles();
+				String fileName;
+				ArrayList<Doctor> doctors = new ArrayList<Doctor>();
+				for(int i = 0; i < listFiles.length; i++)
+				{
+					if(listFiles[i].isFile())
+					{
+						fileName = ("Doctors/").concat(listFiles[i].getName()); 
+						doctors.add(new Doctor());
+						doctors.get(i).load(fileName);
+					}
+				}					
+				// iterate through all object in nurses folder and add to array
+				folder = new File("Nurses/");
+				listFiles = folder.listFiles();
+				ArrayList<Nurse> nurses = new ArrayList<Nurse>();
+				for(int i = 0; i < listFiles.length; i++)
+				{
+					if(listFiles[i].isFile())
+					{
+						fileName = ("Nurses/").concat(listFiles[i].getName()); 
+						nurses.add(new Nurse());
+						nurses.get(i).load(fileName);
+					}
+				}	
+				// iterate through all objects in patietns folder and add to array
+				folder = new File("Patients/");
+				listFiles = folder.listFiles();
+				ArrayList<Patient> patients = new ArrayList<Patient>();
+				for(int i = 0; i < listFiles.length; i++)
+				{
+					if(listFiles[i].isFile())
+					{
+						fileName = ("Patients/").concat(listFiles[i].getName()); 
+						patients.add(new Patient());
+						patients.get(i).load(fileName);
+					}
+				}	
+				
 				ag = new adminGui();
-				Scene administrator = ag.adminGuiScene(stage);
+				Scene administrator = ag.adminGuiScene(stage, patients, nurses, doctors);
 				stage.setScene(administrator);
 			}	
 		}
@@ -123,5 +329,15 @@ public class Login extends Test
 			Scene account = ca.createAccountScene(stage, LoginScreen(stage,usertype), usertype);
 			stage.setScene(account);
 		}
+	}
+	
+	private String loadProperty(BufferedReader bf, String property) throws Exception
+	{
+		String splitLine[] = (bf.readLine()).split("=");
+		if(splitLine[0].equalsIgnoreCase(property)) 
+		{
+			return splitLine[1];
+		}
+		throw new Exception("Invalid");
 	}
 }

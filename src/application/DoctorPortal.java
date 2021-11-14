@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 
 public class DoctorPortal extends Main{
 
-	protected Scene doctorScene() {
+	protected Scene doctorScene(Stage stage, Doctor curDoctor) {
     
 		//**************** Patient Tab *****************
 	/*	BorderPane patientPane = new BorderPane();
@@ -91,8 +91,8 @@ public class DoctorPortal extends Main{
 		p_column7.setStyle("-fx-alignment: CENTER;");
 		patientTable.getColumns().add(p_column7);
 		
-		patientTable.getItems().add(new Patient("Ricky Gervais", "Hydrocodone", "69 lbs", "5 ft 10 inches", "120/80", "97 f", "45 years"));
-		patientTable.getItems().add(new Patient("Rick James", "Adderall", "2 lbs", "5 ft 7 inches", "1210/80", "99 f", "60 years"));
+		//patientTable.getItems().add(new Patient("Ricky Gervais", "Hydrocodone", "69 lbs", "5 ft 10 inches", "120/80", "97 f", "45 years"));
+		//patientTable.getItems().add(new Patient("Rick James", "Adderall", "2 lbs", "5 ft 7 inches", "1210/80", "99 f", "60 years"));
 		
 		patientInfo.setContent(patientTable);
 		
@@ -116,7 +116,7 @@ public class DoctorPortal extends Main{
 		a_column3.setStyle("-fx-alignment: center-left;");
 		apptTable.getColumns().add(a_column3);
 		
-		apptTable.getItems().add(new Appointment("11/11/2011", "Knee Issues", "Knees weak"));
+		//apptTable.getItems().add(new Appointment("11/11/2011", "Knee Issues", "Knees weak"));
 		
 		appointmentHistory.setContent(apptTable);
 		
@@ -138,10 +138,10 @@ public class DoctorPortal extends Main{
 		inbox.setFont(Font.font("Courier", FontWeight.MEDIUM, 30)); 
 		
 		ListView<String> listview = new ListView<String>(); //Listview in middle
-		Message m_obj1 = new Message("Message here");
-		Message m_obj2 = new Message("Another message here");
-		ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
-		listview.setItems(msgList);
+		//Message m_obj1 = new Message("Message here");
+		//Message m_obj2 = new Message("Another message here");
+		//ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
+		//listview.setItems(msgList);
 		
 		Text comp_msg = new Text("Compose Message"); //Text on top
 		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
@@ -159,15 +159,15 @@ public class DoctorPortal extends Main{
 
 		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);
 		// **********************Logout Pane*********************
+
 		BorderPane logOutPane = new BorderPane();
 		logOutPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
 		Button logOut = new Button("Log Out");
 		logOutPane.setCenter(logOut);
-		logOut.setOnAction(new EventHandler<ActionEvent>() {
-		    @Override public void handle(ActionEvent e) {
-		        	stage.setScene(loginScene());	    	
-		    }
-		});	
+		
+		
+	   
+		
 		// *************START OF THE TABS CREATION ************
 		Tab portal = new Tab("   Doctor Portal");
 	    Tab tab1 = new Tab("\t\t\t\t   Patients"); // tabbed to center	
@@ -176,23 +176,31 @@ public class DoctorPortal extends Main{
 	    portal.setDisable(true); // disable portal table 
 	    tab1.setContent(patientPane); // set pane
 		tab2.setContent(msgPane); // set pane
-		tab3.setContent(logOutPane); // set pane
 
 		tab1.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
 		tab2.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
-		tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
 		portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
 			    
 		TabPane tabPane = new TabPane();
 		tabPane.getTabs().addAll(portal, tab1, tab2, tab3); // add children
 		tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
-			    
+			  
+		Button logout = new Button("Logout");
+		logout.setOnAction(e->switchScenes(stage));
+		
 		VBox box = new VBox(10); // create vbox 
-		box.getChildren().add(tabPane); // add tab pane to vbox
+		box.getChildren().addAll(logout,tabPane); // add tab pane to vbox
 		VBox.setVgrow(tabPane, Priority.ALWAYS);
 		box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;"); // set background of vbox
 	
 	    return new Scene(box);
   }
+	
+	private void switchScenes(Stage stage)
+	{
+		HomeScreen home = new HomeScreen();
+		Scene h = home.firstScreen(stage);
+		stage.setScene(h);
+	}
 }
