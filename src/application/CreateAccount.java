@@ -1,4 +1,4 @@
-package javaFX; // application
+package application; // application
 
 import java.io.File;
 import java.io.IOException;
