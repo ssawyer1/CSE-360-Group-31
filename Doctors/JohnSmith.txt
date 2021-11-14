@@ -1,0 +1,8 @@
+Active=true
+Username=JohnSmith
+Password=yep444
+FirstName=John
+LastName=Smith
+NurseID=NancyBrown
+Email=John@gmail.com
+Phone=6865754656

@@ -1,111 +1,274 @@
 package application;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Doctor {
-	private int phoneNumber;
+public class Doctor 
+{
+	private String phoneNumber;
 	private String email;
-	private ArrayList<Patient> patientArrayList;
-	private ArrayList<Nurse> nurseArrayList;
-	private ArrayList<Message> messageArrayList;
+	private String username;
+	private String password;
+	private String fName;
+	private String lName;
+	private String nurseName;
+	private String nurseUser;
+	
+	// active
+	private boolean active;
+	
+	// arrays
+	private ArrayList<Patient> patients;
 	
 	//Default constructor
-	Doctor()
-	{
-		this.phoneNumber = 0;
+	Doctor() {
+		this.fName = "";
+		this.lName = "";
+		this.username = "";
+		this.password = "";
+		this.phoneNumber = "";
 		this.email = "";
-		this.patientArrayList = new ArrayList<Patient>();
-		this.nurseArrayList = new ArrayList<Nurse>();
-		this.messageArrayList = new ArrayList<Message>();
+		this.active = false;	
+		this.nurseName = "unassigned";
+		this.nurseUser = "unassigned";
+		patients = new ArrayList<Patient>();
 	}
 	
-	Doctor(String email, int phoneNumber)
+	// constructor when registering
+	Doctor(String fname, String lname, String user, String pass, String email, String phoneNumber)
 	{
+		this.fName = fname;
+		this.lName = lname;
+		this.username = user;
+		this.password = pass;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		this.patientArrayList = new ArrayList<Patient>();
-		this.nurseArrayList = new ArrayList<Nurse>();
-		this.messageArrayList = new ArrayList<Message>();
+		this.active = false;	
+		this.nurseName = "unassigned";
+		this.nurseUser = "unassigned";
+		patients = new ArrayList<Patient>();
 	}
 	
-	//Methods:
-	
-	public void addPatient(Patient patient)
-	{
-		this.patientArrayList.add(patient);
+	public String getFName() {
+		return this.fName;
 	}
 	
-	public void addNurse(Nurse nurse)
-	{
-		this.nurseArrayList.add(nurse);
+	public String getLName() {
+		return this.lName;
 	}
 	
-	public void addMessage(Message message)
-	{
-		this.messageArrayList.add(message);
+	public String getFullName(){
+		return (this.fName.concat(" ").concat(this.lName));
 	}
 	
-	public void addNote(String note, Patient patient) 
-	{
-		for (int i = 0; i < patientArrayList.size(); i++)
-		{
-			if(patientArrayList.get(i) == patient) 
-			{
-				//patientArrayList.get(i).addNote(note)
-			}
-		}
+	public String getuser() {
+		return this.username;
 	}
 	
-	public void getMessage() 
-	{
-		for (int i = 0; i < messageArrayList.size(); i++)
-		{
-			messageArrayList.get(i).getMessage();
-		}
+	public String getPhone() {
+		return this.phoneNumber;
 	}
 	
-	//viewPatientInformation iterates through the doctor's patientArrayList for patient and returns their information. 
-	public void viewPatientInformation(Patient patient)
-	{
-		for (int i = 0; i < patientArrayList.size(); i++)
-		{
-			if(patientArrayList.get(i) == patient) 
-			{
-				//patientArrayList.get(i).getInformation()
-			}
-		}
+	public String getEmail() {
+		return this.email;
 	}
 	
-	//viewAllPatientInformation iterates through the doctor's patientArrayList and prints the patients information. 
-	public void viewAllPatientInformation()
-		{
-			for (int i = 0; i < patientArrayList.size(); i++)
-			{
-				//patientArrayList.get(i).getInformation()
-			}
-		}
-	
-	//viewMedicalRecord searches the doctor's patientArrayList for patient object and returns their medical record.
-	public void viewMedicalRecord(Patient patient)
-	{
-		for (int i = 0; i < patientArrayList.size(); i++)
-		{
-			if(patientArrayList.get(i) == patient) 
-			{
-				//patient.get(i).getMedicalRecord()
-			}
-		}
+	public boolean getActive() {
+		return this.active;
 	}
 	
-	public void prescribeMedication(Patient patient, String medication)
-	{
-		for (int i = 0; i < patientArrayList.size(); i++)
-		{
-			if(patientArrayList.get(i) == patient)
-			{
-				//patientArrayList.get(i).addMedication(medication);
-			}
-		}
+	public String getnurseName() {
+		return this.nurseName;
 	}
 	
-}
+	public String getnurseID() {
+		return this.nurseUser;
+	}
+	
+	public String getPass() {
+		return this.password;
+	}
+	
+	public void setFName(String newName) {
+		this.fName = newName;
+	}
+	
+	public void setLName(String newName) {
+		this.lName = newName;
+	}
+	
+	public void setUser(String newUser) {
+		this.username = newUser;
+	}
+	
+	public void setPass(String newPass) {
+		this.password = newPass;
+	}
+	
+	public void setNurseName(String newName) {
+		this.nurseName = newName;
+	}
+	
+	public void setNurseID(String newID) {
+		this.nurseUser = newID;
+	}
+	
+	public void setEmail(String newEmail) {
+		this.email = newEmail;
+	}
+	
+	public void setPhone(String newPhone) {
+		this.phoneNumber = newPhone;
+	}
+	
+	public void setActive(boolean status) {
+		this.active = status;
+	}
+	
+	
+	public ArrayList<Patient> getPatients() {
+		return this.patients;
+	}
 
+	public void addPatient(Patient patient) {
+		this.patients.add(patient);
+	}
+	
+	public void save() throws IOException
+	{
+		String fileName = ("Doctors/").concat(username).concat(".txt");
+		FileWriter fw = new FileWriter(fileName);
+		BufferedWriter bw = new BufferedWriter(fw);
+		PrintWriter of = new PrintWriter(bw);
+		
+		// write date
+		of.println("Active=" + String.valueOf(this.active));
+		of.println("Username=" + this.username);
+		of.println("Password=" + this.password);
+		of.println("FirstName=" + this.fName);
+		of.println("LastName=" + this.lName);
+		of.println("NurseID=" + this.nurseUser);
+		of.println("Email=" + this.email);
+		of.println("Phone=" + this.phoneNumber);
+
+		// close file
+		of.close();
+	}
+	
+	public void load(String file)
+	{
+		String fileName = file; 
+		FileReader fr = null;
+		BufferedReader bf = null;
+		try {
+			fr = new FileReader(fileName);
+			bf = new BufferedReader(fr); // want line 4, 5, 6
+			this.active = Boolean.parseBoolean(loadProperty(bf, "Active"));
+			this.username = loadProperty(bf, "Username");
+			this.password = loadProperty(bf, "Password");
+			this.fName = loadProperty(bf, "FirstName");
+			this.lName = loadProperty(bf, "LastName");
+			this.nurseUser = loadProperty(bf, "NurseID");
+			this.email = loadProperty(bf, "Email");
+			this.phoneNumber = loadProperty(bf, "Phone");
+			
+			bf.close();
+		}
+		catch(FileNotFoundException ex)
+		{
+			System.out.println(fileName + " not found.");
+		}
+		catch(IOException ex)
+		{
+			System.out.println(ex.toString());
+		} catch (Exception e) {
+			System.out.print("Problem loading Property");
+		}
+		//use nurse id to get nurse name
+		if(!this.nurseUser.equalsIgnoreCase("unassigned"))
+		{
+			fileName = ("Nurses/").concat(this.nurseUser).concat(".txt"); 
+			fr = null;
+			bf = null;
+			try {
+				fr = new FileReader(fileName);
+				bf = new BufferedReader(fr); // want line 4, 5, 6
+				bf.readLine(); 
+				bf.readLine();
+				bf.readLine();
+				String tempfName = loadProperty(bf, "FirstName");
+				String tempLName = loadProperty(bf, "LastName");
+				this.nurseName = tempfName.concat(" ").concat(tempLName);
+				bf.close();
+			}
+			catch(FileNotFoundException ex)
+			{
+				System.out.println(fileName + " not found.");
+			}
+			catch(IOException ex)
+			{
+				System.out.println(ex.toString());
+			} catch (Exception e) {
+				System.out.print("Problem loading Property");
+			}
+		}
+		
+		// iterate through all  files in the patient folder, find those that match doctor user
+		File folder = new File("Patients/");
+		File[] listFiles = folder.listFiles();
+		int count = 0;
+		for(int i = 0; i < listFiles.length; i++)
+		{
+			if(listFiles[i].isFile())
+			{
+				fileName = ("Patients/").concat(listFiles[i].getName()); 
+				fr = null;
+				bf = null;
+				try {
+					fr = new FileReader(fileName);
+					bf = new BufferedReader(fr); // want line 4, 5, 6
+					for(int j = 0; j < 5; j++)
+					{
+						bf.readLine();
+					}
+					String doctorID = loadProperty(bf, "doctorID"); 
+					if(doctorID.equalsIgnoreCase(this.username))
+					{
+						patients.add(new Patient());
+						patients.get(count).load(fileName);;
+						count++;
+					}
+					bf.close();
+				}
+				catch(FileNotFoundException ex)
+				{
+					System.out.println(fileName + " not found.");
+				}
+				catch(IOException ex)
+				{
+					System.out.println(ex.toString());
+				} catch (Exception e) {
+					System.out.print("Problem loading Property");
+				}
+			}
+		}		
+	}
+	
+	private String loadProperty(BufferedReader bf, String property) throws Exception
+	{
+		String splitLine[] = (bf.readLine()).split("=");
+		if(splitLine[0].equalsIgnoreCase(property)) 
+		{
+			return splitLine[1];
+		}
+		throw new Exception("Invalid");
+	}
+}

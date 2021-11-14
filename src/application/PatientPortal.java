@@ -1,4 +1,4 @@
-package application;
+package application; // javaFX
 
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException;
@@ -25,50 +25,12 @@ import javafx.scene.layout.*;
 import javafx.scene.control.TableView;
 
 import javafx.scene.text.*;
-public class PatientPortal extends Application
+public class PatientPortal extends Main
 {
-	@Override
-	public void start(Stage stage) throws Exception
-	{
-		// set stage size
-		stage.setHeight(900);
-		stage.setWidth(1300);
-		
-		// create tabs and initialize panes
-		Tab portal = new Tab("   Patient Portal");
-	    Tab tab1 = new Tab("\t\t\t\t   Contact Information"); // tabbed to center	
-	    Tab tab2 = new Tab("\t\t\t\t\tPatient Visits"); // tabbed to center
-	    Tab tab3 = new Tab("\t\t\t\t\t    Messages"); // tabbed to center
-	    portal.setDisable(true); // disable portal table 
-	    tab1.setContent(infoPane()); // set pane
-	    tab2.setContent(visitsPane()); // set pane
-	    tab3.setContent(messagePane()); // set pane
-	    
-	    // format tabs
-        tab1.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
-        tab2.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
-        tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
-	    portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
-	    
-	   // create tab pane
-	    TabPane tabPane = new TabPane();
-	    tabPane.getTabs().addAll(portal, tab1, tab2, tab3); // add children
-	    tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
-	    tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
-		
-	    // layout the stage.
-	    VBox box = new VBox(10); // create vbox 
-	    box.getChildren().add(tabPane); // add tab pane to vbox
-	    VBox.setVgrow(tabPane, Priority.ALWAYS);
-	    box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;"); // set background of vbox
-	    Scene scene = new Scene(box);
-	    stage.setScene(scene);
-	    stage.show();
-	}
+	protected Scene patientScene(Stage stage, Patient curPatient) 
+	{		
 
-	// content for messagePane
-	private Pane messagePane() //the article I am referencing here: http://tutorials.jenkov.com/javafx/tableview.html
-	{	
+		//***********************MESSAGE PANE***********************
 		BorderPane msgPane = new BorderPane();
 		msgPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
 		msgPane.setPadding(new Insets(0, 50, 50, 50));
@@ -86,10 +48,10 @@ public class PatientPortal extends Application
 		inbox.setFont(Font.font("Courier", FontWeight.MEDIUM, 30)); 
 		
 		ListView<String> listview = new ListView<String>(); //Listview in middle
-		Message m_obj1 = new Message("Message here");
-		Message m_obj2 = new Message("Another message here");
-		ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
-		listview.setItems(msgList);
+		//Message m_obj1 = new Message("Message here");
+		//Message m_obj2 = new Message("Another message here");
+		//ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
+		//listview.setItems(msgList);
 		
 		Text comp_msg = new Text("Compose Message"); //Text on top
 		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
@@ -105,15 +67,9 @@ public class PatientPortal extends Application
 		BorderPane.setMargin(send, new Insets(20, 0, 20, 0));
 		msgPane.setBottom(send);
 
+		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);	
 
-		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);
-		
-		return msgPane;
-	}
-
-	// content for visitsPane
-	private Pane visitsPane()
-	{
+		//******************VISITS PANE*********************
 		BorderPane vPane = new BorderPane();
 		vPane.setPadding(new Insets(0, 50, 50, 50)); 
 		vPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
@@ -130,31 +86,31 @@ public class PatientPortal extends Application
 		//add columns to table
 		TableColumn <Appointment, String> column1 = new TableColumn<>("Date");
 		column1.setCellValueFactory(new PropertyValueFactory<>("date"));
-		
 		column1.setStyle("-fx-alignment: CENTER;");
-		column1.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.3));
+		column1.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.2));
 		column1.setResizable(false);
 		visitsTable.getColumns().add(column1);
 		
 		TableColumn <Appointment, String> column2 = new TableColumn<>("Description");
-		column2.setCellValueFactory(new PropertyValueFactory<>("description"));
-		
+		column2.setCellValueFactory(new PropertyValueFactory<>("reason"));
 		column2.setStyle("-fx-alignment: CENTER;");
-		column2.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.7));
+		column2.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.4));
 		column2.setResizable(false);	
 		visitsTable.getColumns().add(column2);
 		
-		visitsTable.getItems().add(new Appointment("Date here", "Appointment description here"));
-		visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here"));
+		TableColumn <Appointment, String> column3 = new TableColumn<>("Nurse Notes");
+		column3.setCellValueFactory(new PropertyValueFactory<>("notes"));
+		column3.setStyle("-fx-alignment: CENTER;");
+		column3.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.4));
+		column3.setResizable(false);	
+		visitsTable.getColumns().add(column3);
+		
+		//visitsTable.getItems().add(new Appointment("Date here", "Appointment description here", "Patient Notes Here"));
+		//visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here", "Additonal Patient Notes Here"));
 		
 		vPane.setCenter(visitsTable);
-
-		return vPane;
-	}
-
-	// content for infoPane
-	private Pane infoPane()
-	{
+		
+	    //*********************INFORMATION PANE*********************************
 		// create border pane
 		BorderPane infoPane = new BorderPane();
 		infoPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");"); // set background color
@@ -210,7 +166,7 @@ public class PatientPortal extends Application
 		Image image; 
 		try 
 		{
-			inputstream = new FileInputStream("C:\\Users\\Sam Sawyer\\OneDrive\\Documents\\College Docs\\_Junior Year 2021\\CSE 360\\avatar2.png"); // file location 
+			inputstream = new FileInputStream("C:\\Users\\Maya\\Data\\System\\Installations\\Eclipse\\javaFX\\avatar2.png"); // file location 
 			image = new Image(inputstream);  // image
 			ImageView view = new ImageView(image); // view image
 			view.setFitHeight(475);  // set size
@@ -219,18 +175,51 @@ public class PatientPortal extends Application
 			infoBox.setAlignment(Pos.TOP_CENTER); // set at center
 		} catch (FileNotFoundException e) 
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	    
 		// add infoBox to center of border pane
 		infoPane.setCenter(infoBox);
-		return infoPane; // return pane
-	}
+		
+	    //***************************Tabs (used to be at the beginning)**********************************
+		Tab portal = new Tab("   Patient Portal");
+		Tab tab1 = new Tab("\t\t\t\t   Contact Information"); // tabbed to center	
+		Tab tab2 = new Tab("\t\t\t\t\tPatient Visits"); // tabbed to center
+		Tab tab3 = new Tab("\t\t\t\t\t    Messages"); // tabbed to center
+		portal.setDisable(true); // disable portal table 
+		tab1.setContent(infoPane); // set pane
+		tab2.setContent(vPane); // set pane
+		tab3.setContent(msgPane); // set pane
+		    
+		    // format tabs
+	    tab1.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab1
+	    tab2.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0;"); // round tab2
+	    tab3.setStyle("-fx-pref-width: 356; -fx-pref-height: 50; -fx-border-radius: 10 10 0 0; -fx-background-radius: 10 10 0 0; "); // round tab3
+		portal.setStyle("-fx-pref-width: 120; -fx-pref-height: 30; -fx-background-color: rgb(" + 129 + "," + 138 + ", " + 151 + "); -fx-opacity: 1; -fx-text-base-color: white; -fx-font-weight: bold");
+		    
+		   // create tab pane
+		TabPane tabPane = new TabPane();
+		tabPane.getTabs().addAll(portal, tab1, tab2, tab3); // add children
+		tabPane.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
+			
+		    // layout the stage.
+		Button logout = new Button("Logout");
+		logout.setOnAction(e->switchScenes(stage));
+		
+		VBox box = new VBox(10); // create vbox 
+	    box.getChildren().addAll(logout,tabPane); // add tab pane to vbox
+	    box.setAlignment(Pos.TOP_RIGHT);
+		VBox.setVgrow(tabPane, Priority.ALWAYS);
+		box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;"); // set background of vbox
+		
+		return new Scene(box);
+  }
 	
-	public static void main(String[] args)
+	private void switchScenes(Stage stage)
 	{
-		Application.launch(args);
+		HomeScreen home = new HomeScreen();
+		Scene h = home.firstScreen(stage);
+		stage.setScene(h);
 	}
 }
-
