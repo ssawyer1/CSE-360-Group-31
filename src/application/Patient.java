@@ -144,7 +144,8 @@ public class Patient
 	
 	public String getFullName()
 	{
-		return (this.fName.concat(" ").concat(this.lName));
+		String fullName = this.fName.concat(" ").concat(this.lName);
+		return fullName;
 	}
 	
 	public String getEmail() {
@@ -171,7 +172,7 @@ public class Patient
 		return this.gender;
 	}
 	
-	public String gerInsurCo() {
+	public String getInsurCo() {
 		return this.insuranceCo;
 	}
 	
