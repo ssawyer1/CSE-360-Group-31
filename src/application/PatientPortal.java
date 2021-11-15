@@ -17,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.geometry.Insets;
@@ -126,9 +125,7 @@ public class PatientPortal extends Main
 		// create text area to hold information
 		TextArea info = new TextArea(); // create
 		info.setFont(Font.font("Courier", 25)); // set font
-		String user = curPatient.getUsername();
-		curPatient.load("Patients/" + user + ".txt");
-		info.setText(curPatient.getFullName() + "\nAddress: " + curPatient.getPharm() + "\nMobile Phone: " + curPatient.getPhoneNum() + "\nEmail: " + curPatient.getEmail()); // set content
+		info.setText("John Doe\nAddress: 1234 W Loma Lane\nMobile Phone: 623-908-0456\nHome Phone: 623-657-0223\nEmail: username@gmail.com"); // set content
 		info.setEditable(false); // disallow edit
 		info.setMaxSize(550, 200); // set size
 		
@@ -137,32 +134,24 @@ public class PatientPortal extends Main
 		edit.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); // set font
 		
 		// create text areas for editable information
-		TextArea name = new TextArea();
 		TextArea address = new TextArea();
 		TextArea mobile = new TextArea();
+		TextArea home = new TextArea();
 		TextArea email = new TextArea();
-		name.setMaxSize(400, 20);
 		address.setMaxSize(400, 20);
 		mobile.setMaxSize(400, 20);
+		home.setMaxSize(400, 20);
 		email.setMaxSize(400, 20);
-		
-		//creating error text
-		Text error = new Text();
-		error.setFont(Font.font("Courier", 15));
-		error.setFill(Color.DARKRED);
 		
 		// create button to submit information
 		Button submit = new Button("Submit");
 		submit.setMaxSize(100, 20); // set size
 		submit.setStyle("-fx-background-radius: 5"); // round button edges
-		//if button is clicked update the patient info
-		submit.setOnAction(e->update(name, address, mobile, email, error, curPatient, info));
-		
 		
 		// create vbox to hold left information
 		VBox subLeft = new VBox();
 		subLeft.setSpacing(20); // spacing between objects in vbox
-		subLeft.getChildren().addAll(info,edit, name, address, mobile, email, submit, error); // add objects
+		subLeft.getChildren().addAll(info,edit, address, mobile, home, email, submit); // add objects
 		subLeft.setAlignment(Pos.TOP_CENTER); // align at center
 		
 		// create hbox to hold left information and right picture
@@ -232,30 +221,5 @@ public class PatientPortal extends Main
 		HomeScreen home = new HomeScreen();
 		Scene h = home.firstScreen(stage);
 		stage.setScene(h);
-	}
-	//method to update the information displayed
-	private void update(TextArea name, TextArea address, TextArea mobile, TextArea email, Text error, Patient patient, TextArea info)
-	{
-		if(name.getText().equals(patient.getFullName()))
-		{
-			error.setText("Name is already the same");
-		}
-		else if(address.getText().equals(patient.getPharm()))
-		{
-			error.setText("Address is already the same");
-		}
-		else if(mobile.getText().equals(patient.getPhoneNum()))
-		{
-			error.setText("Phone number is already the same");
-		}
-		else if(email.getText().equals(patient.getEmail()))
-		{
-			error.setText("Email is already the same");
-		}
-		else
-		{
-			info.setText(name.getText() + "\nAddress: " + address.getText() + "\nMobile Phone: " + mobile.getText() + "\nEmail: " + email.getText()); // set content
-		}
-		
 	}
 }

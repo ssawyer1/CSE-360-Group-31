@@ -101,7 +101,7 @@ public class Patient
 		prescriptions = new ArrayList<Prescription>();
 		immunizations = new ArrayList<Immunization>();
 	}
-	//getters and setter methods
+	
 	public boolean getActive() {
 		return this.active;
 	}
