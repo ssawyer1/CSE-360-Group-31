@@ -89,7 +89,7 @@ public class CreateAccount extends Main
 		fn.setStyle("-fx-text-fill: gray");	
 		fn.setMaxSize(300, 14);
 		
-		Text lname = new Text("Last Name");
+		Text lname = new Text();
 		lname.setFont(Font.font("Courier", 15));
 		
 		ln = new TextArea();
@@ -125,7 +125,7 @@ public class CreateAccount extends Main
 		
 		if(type.equalsIgnoreCase("patient"))
 		{
-			Text date = new Text("Date of Birth (XX/XX/XX)");
+			Text date = new Text("Date of Birth");
 			date.setFont(Font.font("Courier", 15));
 			
 			dob = new TextArea();
@@ -235,8 +235,6 @@ public class CreateAccount extends Main
 		String fileName = ("Patients/".concat(user.getText()).concat(".txt"));
 		File tempFile = new File(fileName);
 		boolean exists = tempFile.exists();
-		//store date in string to traverse
-		String date = dob.getText();
 		if(exists == true)
 		{
 			error.setText("Username is already in use.");
@@ -245,11 +243,6 @@ public class CreateAccount extends Main
 		else if(!pass.getText().equals(con.getText()))
 		{
 			error.setText("Passwords do not match.");
-		}
-		//if dob not in correct format
-		else if(date.charAt(2) != '/' || date.charAt(5) != '/')
-		{
-			error.setText("Worng format for date");
 		}
 		else
 		{

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Doctor 
 {
@@ -66,7 +67,8 @@ public class Doctor
 	}
 	
 	public String getFullName(){
-		return (this.fName.concat(" ").concat(this.lName));
+		String fullName = this.fName.concat(" ").concat(this.lName);
+		return fullName;
 	}
 	
 	public String getuser() {

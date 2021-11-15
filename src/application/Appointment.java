@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 
 public class Appointment 
 {
-	
 	private String date;
 	private String reason;
 	private String height;

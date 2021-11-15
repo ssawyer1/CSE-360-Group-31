@@ -101,7 +101,7 @@ public class Patient
 		prescriptions = new ArrayList<Prescription>();
 		immunizations = new ArrayList<Immunization>();
 	}
-	//getters and setter methods
+	
 	public boolean getActive() {
 		return this.active;
 	}
@@ -144,7 +144,8 @@ public class Patient
 	
 	public String getFullName()
 	{
-		return (this.fName.concat(" ").concat(this.lName));
+		String fullName = this.fName.concat(" ").concat(this.lName);
+		return fullName;
 	}
 	
 	public String getEmail() {
@@ -171,7 +172,7 @@ public class Patient
 		return this.gender;
 	}
 	
-	public String gerInsurCo() {
+	public String getInsurCo() {
 		return this.insuranceCo;
 	}
 	
@@ -406,8 +407,8 @@ public class Patient
 				for(int i = 0; i < Integer.parseInt(splitLine[1]); i++)
 				{
 					doctorMsgs.add(new Message());
-					doctorMsgs.get(i).setMessage(loadProperty(bf, "Date"));
-					doctorMsgs.get(i).setDate(loadProperty(bf, "Message"));
+					doctorMsgs.get(i).setDate(loadProperty(bf, "Date"));
+					doctorMsgs.get(i).setMessage(loadProperty(bf, "Message"));
 					doctorMsgs.get(i).setSendName(loadProperty(bf, "SendName"));
 					doctorMsgs.get(i).setSendType((loadProperty(bf, "SendType")));
 				}
@@ -419,8 +420,8 @@ public class Patient
 				for(int i = 0; i < Integer.parseInt(splitLine[1]); i++)
 				{
 					nurseMsgs.add(new Message());
-					nurseMsgs.get(i).setMessage(loadProperty(bf, "Date"));
-					nurseMsgs.get(i).setDate(loadProperty(bf, "Message"));
+					nurseMsgs.get(i).setDate(loadProperty(bf, "Date"));
+					nurseMsgs.get(i).setMessage(loadProperty(bf, "Message"));
 					nurseMsgs.get(i).setSendName(loadProperty(bf, "SendName"));
 					nurseMsgs.get(i).setSendType((loadProperty(bf, "SendType")));
 				}

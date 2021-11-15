@@ -259,7 +259,7 @@ public class Login extends Main
 						// load patient
 						Nurse loggedInNurse = new Nurse();
 						loggedInNurse.load(fileName);
-						pp = new PatientPortal();
+						np = new NursePortal();
 						Scene nurse = np.NurseScene(stage, loggedInNurse);
 						stage.setScene(nurse);
 					}
