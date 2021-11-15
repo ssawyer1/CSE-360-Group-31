@@ -1,5 +1,7 @@
 package application;
 
+import java.time.LocalDateTime;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -206,30 +209,46 @@ public class DoctorPortal extends Main{
 		TableView<Message> messageTable = new TableView<Message>(); //create table
 		messageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
-		TableColumn <Message, String> m_column1 = new TableColumn<>("From");
+		TableColumn <Message, String> m_column1 = new TableColumn<>("From"); //From sendName column
 		m_column1.setCellValueFactory(new PropertyValueFactory<>("sendName"));
 		m_column1.setStyle("-fx-alignment: CENTER;");
 	
-		TableColumn <Message, String> m_column2 = new TableColumn<>("Message");
+		TableColumn <Message, String> m_column2 = new TableColumn<>("Message");//Column showing message content
 		m_column2.setCellValueFactory(new PropertyValueFactory<>("message"));
 		m_column2.setStyle("-fx-alignment: CENTER;");
 		
+		TableColumn <Message, String> m_column3 = new TableColumn<>("Date");//Column showing message date
+		m_column3.setCellValueFactory(new PropertyValueFactory<>("date"));
+		m_column3.setStyle("-fx-alignment: CENTER;");
 		
 		messageTable.getColumns().add(m_column1);
-		messageTable.getColumns().add(m_column2);
+		messageTable.getColumns().add(m_column2);//adding columns to table
+		messageTable.getColumns().add(m_column3);
 		
-		for(Patient p : curDoctor.getPatients())
+		for(Patient p : curDoctor.getPatients())//iterating through patients and their messages to doctor
 		{
 			for(Message m: p.getDoctorMsg())
 			{
-				messageTable.getItems().add(m);
+				if(m.getSendName().equalsIgnoreCase(curDoctor.getFullName()) == false) //only displaying incoming messages
+				{
+					messageTable.getItems().add(m);
+				}
 			}
 		}
 		
-		Text comp_msg = new Text("Compose Message"); //Text on top
+		Text comp_msg = new Text("New Message"); //Text on top
 		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
 		
-		TextArea compose = new TextArea();
+		Text to_msg = new Text("To"); //Text on top
+		to_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 15)); 
+		
+		TextArea to = new TextArea();//Area to type in receiver's name
+		to.setText("Firstname Lastname");
+		
+		Text comp_msg1 = new Text("Message Content"); //Text on top
+		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
+		
+		TextArea compose = new TextArea();//Area to send new message
 		compose.setText("New Message");
 		
 		BorderPane.setAlignment(messageTable, Pos.CENTER);
@@ -239,8 +258,44 @@ public class DoctorPortal extends Main{
 		BorderPane.setAlignment(send, Pos.BOTTOM_LEFT);
 		BorderPane.setMargin(send, new Insets(20, 0, 20, 0));
 		msgPane.setBottom(send);
+		
+		Text error = new Text(""); //Text on bottom
+		error.setFont(Font.font("Courier", 15));
+		
+		LocalDateTime now = LocalDateTime.now(); //getting date of message
+		
+		send.setOnMouseClicked(e -> {
+			if (e.getClickCount() >= 1) {
+				String senderName = to.getText(); //extracting patient name and message content
+				String message = compose.getText();
+				int sent = 0;
+				
+				for(Patient p : curDoctor.getPatients())//checking Doctor's patient array for message receiver
+					{
+						if(senderName.equalsIgnoreCase(p.getFullName()))
+							{
+								p.addDoctorMsg(now, message, "Doctor", senderName);
+								sent = 1;
+							}
+					}
+				if(sent == 0)
+				{	
+					error.setFill(Color.RED);
+					error.setText("Patient not found");
+				}
+				else
+				{
+					error.setFill(Color.GREEN);
+					error.setText("Message Sent");
+					to.setText("Firstname Lastname");
+					comp_msg.setText("Message Content");
+					
+				}
+				
+			}		
+		});
 
-		vbox.getChildren().addAll(inbox, messageTable, comp_msg, compose);	
+		vbox.getChildren().addAll(inbox, messageTable, comp_msg, to_msg, to,comp_msg1, compose, error);	
 	   
 		// *************START OF THE TABS CREATION ************
 		Tab portal = new Tab("   Doctor Portal");
