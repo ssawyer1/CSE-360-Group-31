@@ -203,11 +203,28 @@ public class DoctorPortal extends Main{
 		Text inbox = new Text("Inbox"); //Text on top
 		inbox.setFont(Font.font("Courier", FontWeight.MEDIUM, 30)); 
 		
-		ListView<String> listview = new ListView<String>(); //Listview in middle
-		//Message m_obj1 = new Message("Message here");
-		//Message m_obj2 = new Message("Another message here");
-		//ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
-		//listview.setItems(msgList);
+		TableView<Message> messageTable = new TableView<Message>(); //create table
+		messageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		
+		TableColumn <Message, String> m_column1 = new TableColumn<>("From");
+		m_column1.setCellValueFactory(new PropertyValueFactory<>("sendName"));
+		m_column1.setStyle("-fx-alignment: CENTER;");
+	
+		TableColumn <Message, String> m_column2 = new TableColumn<>("Message");
+		m_column2.setCellValueFactory(new PropertyValueFactory<>("message"));
+		m_column2.setStyle("-fx-alignment: CENTER;");
+		
+		
+		messageTable.getColumns().add(m_column1);
+		messageTable.getColumns().add(m_column2);
+		
+		for(Patient p : curDoctor.getPatients())
+		{
+			for(Message m: p.getDoctorMsg())
+			{
+				messageTable.getItems().add(m);
+			}
+		}
 		
 		Text comp_msg = new Text("Compose Message"); //Text on top
 		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
@@ -215,15 +232,15 @@ public class DoctorPortal extends Main{
 		TextArea compose = new TextArea();
 		compose.setText("New Message");
 		
-		BorderPane.setAlignment(listview, Pos.CENTER);
-		BorderPane.setMargin(listview, new Insets(100, 50, 100, 50));
+		BorderPane.setAlignment(messageTable, Pos.CENTER);
+		BorderPane.setMargin(messageTable, new Insets(100, 50, 100, 50));
 		
 		Button send = new Button("  Send  ");
 		BorderPane.setAlignment(send, Pos.BOTTOM_LEFT);
 		BorderPane.setMargin(send, new Insets(20, 0, 20, 0));
 		msgPane.setBottom(send);
 
-		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);	
+		vbox.getChildren().addAll(inbox, messageTable, comp_msg, compose);	
 	   
 		// *************START OF THE TABS CREATION ************
 		Tab portal = new Tab("   Doctor Portal");
