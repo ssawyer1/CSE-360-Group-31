@@ -2,6 +2,8 @@ package application; // javaFX
 
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -158,6 +160,13 @@ public class PatientPortal extends Main
 		//if button is clicked update the patient info
 		submit.setOnAction(e->update(name, address, mobile, email, error, curPatient, info));
 		
+		//trying to save updated info but it didn't work, will come back
+		try {
+			curPatient.save();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// create vbox to hold left information
 		VBox subLeft = new VBox();
@@ -234,7 +243,7 @@ public class PatientPortal extends Main
 		stage.setScene(h);
 	}
 	//method to update the information displayed
-	private void update(TextArea name, TextArea address, TextArea mobile, TextArea email, Text error, Patient patient, TextArea info)
+	private static void update(TextArea name, TextArea address, TextArea mobile, TextArea email, Text error, Patient patient, TextArea info)
 	{
 		if(name.getText().equals(patient.getFullName()))
 		{
@@ -255,6 +264,13 @@ public class PatientPortal extends Main
 		else
 		{
 			info.setText(name.getText() + "\nAddress: " + address.getText() + "\nMobile Phone: " + mobile.getText() + "\nEmail: " + email.getText()); // set content
+			String tempName = name.getText();
+			String[] splitFullName = tempName.split("\\s+");
+			patient.setFName(splitFullName[0]);
+			patient.setLName(splitFullName[1]);
+			patient.setPharm(address.getText());
+			patient.setPhoneNum(mobile.getText());
+			patient.setEmail(email.getText());
 		}
 		
 	}
