@@ -49,6 +49,7 @@ public class NursePortal extends Main{
 	    Text bloodText = new Text("3) Enter the Patient's blood pressure:");
 	    Text tempText = new Text("4) Enter the Patient's body temperature:");
 	    Text olderTextCheck = new Text("Is the Patient older then 12?");
+		Text newPatientText = new Text("Is this a new Patient?");
 	    Text notes = new Text("Additional Notes");
 	    TextArea noteSpace= new TextArea("Type here");
 	    TextField lastNameField = new TextField();
@@ -69,10 +70,32 @@ public class NursePortal extends Main{
 		olderTextCheck.setFont(Font.font("Courier", 20));
 		notes.setFont(Font.font("Courier", 20));
 		noteSpace.setFont(Font.font("Courier", 20));
+		newPatientText.setFont(Font.font("Courier", 20));
 	    
 	    homePane.setTop(home);
 	    homePane.setCenter(homeGrid);
 	    homePane.setBottom(submit);
+		homeGrid.add(firstName, 1, 1);
+		homeGrid.add(lastName, 1, 2);
+		homeGrid.add(weightText, 1, 3);
+		homeGrid.add(heightText, 1, 4);
+		homeGrid.add(bloodText, 1, 5);
+		homeGrid.add(tempText, 1, 6);
+		homeGrid.add(olderTextCheck, 1, 7);
+		homeGrid.add(notes, 1, 8);
+		homeGrid.add(firstNameField,2,1);
+		homeGrid.add(lastNameField,2,2);
+		homeGrid.add(weightField,2,3);
+		homeGrid.add(heightField,2,4);
+		homeGrid.add(bloodField,2,5);
+		homeGrid.add(tempField,2,6);
+		homeGrid.add(olderCheck,2,7);
+		homeGrid.add(noteSpace,2,8);
+		homeGrid.add(newPatientText,1,9);
+		homeGrid.add(newPatient,2,9);
+
+		homeGrid.setAlignment(Pos.TOP_LEFT);
+
 
 		//*******************Patient Pane(Tab2)*************************
 		BorderPane bp = new BorderPane();
@@ -186,17 +209,49 @@ public class NursePortal extends Main{
 		BorderPane.setAlignment(details, Pos.CENTER_LEFT);
 		bp.setCenter(details);
 		
-		//************************Doctor Message Pane(Tab 3)*************************
+		//************************Nurse Message Pane(Tab 3)*************************
 		//can be very heavily based on the DoctorPortal's Message Pane
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+		BorderPane msgPane = new BorderPane();
+		msgPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
+		msgPane.setPadding(new Insets(0, 50, 50, 50));
+
+		VBox vbox = new VBox(8);
+		msgPane.setCenter(vbox);
+
+		Text msgPhy = new Text("Messages"); //Text on top
+		msgPhy.setFont(Font.font("Courier", FontWeight.BOLD, 30));
+		BorderPane.setAlignment(msgPhy, Pos.CENTER);
+		BorderPane.setMargin(msgPhy, new Insets(40, 0, 45, 0));
+		msgPane.setTop(msgPhy);
+
+		Text inbox = new Text("Inbox"); //Text on top
+		inbox.setFont(Font.font("Courier", FontWeight.MEDIUM, 30));
+
+		ListView<String> listview = new ListView<String>(); //Listview in middle
+		//Message m_obj1 = new Message("Message here");
+		//Message m_obj2 = new Message("Another message here");
+		//ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
+		//listview.setItems(msgList);
+
+		Text comp_msg = new Text("Compose Message"); //Text on top
+		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20));
+
+		TextArea compose = new TextArea();
+		compose.setText("New Message");
+
+		BorderPane.setAlignment(listview, Pos.CENTER);
+		BorderPane.setMargin(listview, new Insets(100, 50, 100, 50));
+
+		Button send = new Button("  Send  ");
+		BorderPane.setAlignment(send, Pos.BOTTOM_LEFT);
+		BorderPane.setMargin(send, new Insets(20, 0, 20, 0));
+		msgPane.setBottom(send);
+
+		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);
+
+
+
 		// *************START OF THE TABS CREATION ************
 		Tab portal = new Tab("   Nurse Portal");
 		Tab tab1 = new Tab("\t\t\t\t\t\t Home");
@@ -212,7 +267,7 @@ public class NursePortal extends Main{
         
         tab1.setContent(homePane);
         tab2.setContent(bp);
-       // tab3.setContent(value);
+       tab3.setContent(msgPane);
 
 	   // create tab pane
 	    TabPane tabPane = new TabPane();
