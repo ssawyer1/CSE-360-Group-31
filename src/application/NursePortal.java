@@ -38,9 +38,13 @@ public class NursePortal extends Main{
 		BorderPane homePane = new BorderPane();
 		homePane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;");
 	    GridPane homeGrid = new GridPane(); //goes inside borderpane
+	    homeGrid.setHgap(50); //horizontal gap in pixels => that's what you are asking for
+	    homeGrid.setVgap(20); //vertical gap in pixels
+	   
 	    
 	    CheckBox newPatient = new CheckBox();	    
 	    CheckBox olderCheck = new CheckBox();
+	    
 	    Text home = new Text("Home");
 	    Text firstName = new Text("First Name: ");	   
 	    Text lastName = new Text("Last Name: ");	    
@@ -51,13 +55,17 @@ public class NursePortal extends Main{
 	    Text olderTextCheck = new Text("Is the Patient older then 12?");
 		Text newPatientText = new Text("Is this a new Patient?");
 	    Text notes = new Text("Additional Notes");
-	    TextArea noteSpace= new TextArea("Type here");
+	  
 	    TextField lastNameField = new TextField();
 	    TextField firstNameField = new TextField();
 	    TextField weightField = new TextField();
 	    TextField heightField = new TextField();
 	    TextField bloodField = new TextField();
 	    TextField tempField = new TextField();
+
+	    TextArea noteSpace= new TextArea("Type here");
+	    noteSpace.setPrefSize(650,  100);
+	    
 	    Button submit = new Button("Submit");
 	    
 	    home.setFont(Font.font("Courier", FontWeight.BOLD, 30)); 
@@ -72,29 +80,41 @@ public class NursePortal extends Main{
 		noteSpace.setFont(Font.font("Courier", 20));
 		newPatientText.setFont(Font.font("Courier", 20));
 	    
-	    homePane.setTop(home);
-	    homePane.setCenter(homeGrid);
-	    homePane.setBottom(submit);
-		homeGrid.add(firstName, 1, 1);
-		homeGrid.add(lastName, 1, 2);
-		homeGrid.add(weightText, 1, 3);
-		homeGrid.add(heightText, 1, 4);
-		homeGrid.add(bloodText, 1, 5);
-		homeGrid.add(tempText, 1, 6);
-		homeGrid.add(olderTextCheck, 1, 7);
-		homeGrid.add(notes, 1, 8);
-		homeGrid.add(firstNameField,2,1);
-		homeGrid.add(lastNameField,2,2);
-		homeGrid.add(weightField,2,3);
-		homeGrid.add(heightField,2,4);
-		homeGrid.add(bloodField,2,5);
-		homeGrid.add(tempField,2,6);
-		homeGrid.add(olderCheck,2,7);
-		homeGrid.add(noteSpace,2,8);
-		homeGrid.add(newPatientText,1,9);
-		homeGrid.add(newPatient,2,9);
+	  
+	    homeGrid.add(home, 1, 0);
+	    homeGrid.add(newPatientText, 1, 1);
+		homeGrid.add(firstName, 1, 2);
+		homeGrid.add(lastName, 1, 3);
+		homeGrid.add(weightText, 1, 4);
+		homeGrid.add(heightText, 1, 5);
+		homeGrid.add(bloodText, 1, 6);
+		homeGrid.add(tempText, 1, 7);
+		homeGrid.add(olderTextCheck, 1, 8);
+		//homeGrid.add(notes, 1, 9);
+		
+		homeGrid.add(newPatient, 2, 1);
+		homeGrid.add(firstNameField,2,2);
+		homeGrid.add(lastNameField,2,3);
+		homeGrid.add(weightField,2,4);
+		homeGrid.add(heightField,2,5);
+		homeGrid.add(bloodField,2,6);
+		homeGrid.add(tempField,2,7);
+		homeGrid.add(olderCheck,2,8);
+		
+		GridPane bottomPane = new GridPane();
+		bottomPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;");
+		bottomPane.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+		bottomPane.setVgap(20); //vertical gap in pixels
+		
+		bottomPane.add(notes, 1, 0);
+		bottomPane.add(noteSpace, 1, 1);
+		bottomPane.add(submit, 1, 2);
+		
+		homePane.setTop(homeGrid);
+		homePane.setBottom(bottomPane);
 
-		homeGrid.setAlignment(Pos.TOP_LEFT);
+
+		//homeGrid.setAlignment(Pos.TOP_LEFT);
 
 
 		//*******************Patient Pane(Tab2)*************************
@@ -136,6 +156,8 @@ public class NursePortal extends Main{
 		GridPane details = new GridPane();
 		details.setHgap(5); //horizontal gap in pixels => that's what you are asking for
 		details.setVgap(5); //vertical gap in pixels
+		
+		ListView<String> prescriptionList = new ListView<String>();
 		
 		Text pInfo = new Text("Patient Info");
 		
@@ -188,8 +210,10 @@ public class NursePortal extends Main{
 		details.add(newInNum, 3, 7);
 		details.add(newNurse, 3, 8);
 		details.setAlignment(Pos.TOP_LEFT);
+		
 		patientTable.setOnMouseClicked(e -> {
 			if (e.getClickCount() >= 1) {
+				prescriptionList.getItems().clear();
 				if (patientTable.getSelectionModel().getSelectedItem() != null) 
 				{
 					Patient p = patientTable.getSelectionModel().getSelectedItem();
@@ -199,15 +223,19 @@ public class NursePortal extends Main{
 					newGender.setText(p.getGender());
 					newInCo.setText(p.getInsurCo());
 					newInNum.setText(p.getInsurNum());
-					newNurse.setText(p.getNurseName());
-					
+					newNurse.setText(p.getNurseName());		
+					for(Prescription prescription : p.getPrescriptions())
+					{
+						prescriptionList.getItems().addAll(prescription.getType());
+					}
 				}
 			}		
 		});
-		
 		bp.setLeft(pBox);
 		BorderPane.setAlignment(details, Pos.CENTER_LEFT);
 		bp.setCenter(details);
+		bp.setRight(prescriptionList);
+		
 		
 		//************************Nurse Message Pane(Tab 3)*************************
 		//can be very heavily based on the DoctorPortal's Message Pane
