@@ -84,6 +84,8 @@ public class DoctorPortal extends Main{
 		details.setHgap(5); //horizontal gap in pixels => that's what you are asking for
 		details.setVgap(5); //vertical gap in pixels
 		
+		ListView<String> prescriptionList = new ListView<String>();
+		
 		Text pInfo = new Text("Patient Info");
 		
 		Text email = new Text("Email:");
@@ -137,6 +139,7 @@ public class DoctorPortal extends Main{
 		details.setAlignment(Pos.TOP_LEFT);
 		patientTable.setOnMouseClicked(e -> {
 			if (e.getClickCount() >= 1) {
+				prescriptionList.getItems().clear();
 				if (patientTable.getSelectionModel().getSelectedItem() != null) 
 				{
 					Patient p = patientTable.getSelectionModel().getSelectedItem();
@@ -146,15 +149,18 @@ public class DoctorPortal extends Main{
 					newGender.setText(p.getGender());
 					newInCo.setText(p.getInsurCo());
 					newInNum.setText(p.getInsurNum());
-					newNurse.setText(p.getNurseName());
-					
+					newNurse.setText(p.getNurseName());		
+					for(Prescription prescription : p.getPrescriptions())
+					{
+						prescriptionList.getItems().addAll(prescription.getType());
+					}
 				}
 			}		
 		});
-		
 		bp.setLeft(pBox);
 		BorderPane.setAlignment(details, Pos.CENTER_LEFT);
 		bp.setCenter(details);
+		bp.setRight(prescriptionList);
 		patientInfo.setContent(bp);
 		
 		//************Appointment History Tab**************

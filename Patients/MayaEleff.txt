@@ -25,4 +25,4 @@ SendType=patient
 NurseMessageNumber=0
 AppointmentNum=0
 ImmunizationNum=0
-PrescriptionNum=0
+PrescriptionNum=1

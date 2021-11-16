@@ -245,10 +245,11 @@ public class PatientPortal extends Main
 		edit.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); // set font
 		
 		// create text areas for editable information
-		TextArea name = new TextArea();
-		TextArea address = new TextArea();
-		TextArea mobile = new TextArea();
-		TextArea email = new TextArea();
+		
+		TextArea name = new TextArea("Enter a new name");
+		TextArea address = new TextArea("Enter a new Address");
+		TextArea mobile = new TextArea("Enter a new phone number");
+		TextArea email = new TextArea("enter a new email");
 		name.setMaxSize(400, 20);
 		address.setMaxSize(400, 20);
 		mobile.setMaxSize(400, 20);
