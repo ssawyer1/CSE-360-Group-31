@@ -229,7 +229,7 @@ public class DoctorPortal extends Main{
 		{
 			for(Message m: p.getDoctorMsg())
 			{
-				if(m.getSendName().equalsIgnoreCase(curDoctor.getFullName()) == false) //only displaying incoming messages
+				if(m.getSendName().equalsIgnoreCase(curDoctor.getFullName()) == false) //only displaying incoming messages(sendName != Doctor name)
 				{
 					messageTable.getItems().add(m);
 				}
@@ -246,7 +246,7 @@ public class DoctorPortal extends Main{
 		to.setText("Firstname Lastname");
 		
 		Text comp_msg1 = new Text("Message Content"); //Text on top
-		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
+		comp_msg1.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
 		
 		TextArea compose = new TextArea();//Area to send new message
 		compose.setText("New Message");
@@ -262,17 +262,19 @@ public class DoctorPortal extends Main{
 		Text error = new Text(""); //Text on bottom
 		error.setFont(Font.font("Courier", 15));
 		
-		LocalDateTime now = LocalDateTime.now(); //getting date of message
+		
 		
 		send.setOnMouseClicked(e -> {
 			if (e.getClickCount() >= 1) {
-				String senderName = to.getText(); //extracting patient name and message content
-				String message = compose.getText();
+				String senderName = curDoctor.getFullName(); //getting doctor name
+				String recieverName = to.getText(); //extracting patient name
+				String message = compose.getText(); //message content
+				LocalDateTime now = LocalDateTime.now(); //getting date of message
 				int sent = 0;
 				
-				for(Patient p : curDoctor.getPatients())//checking Doctor's patient array for message receiver
+				for(Patient p : curDoctor.getPatients())//checking if a patient of the given name exists
 					{
-						if(senderName.equalsIgnoreCase(p.getFullName()))
+						if(recieverName.equalsIgnoreCase(p.getFullName()))
 							{
 								p.addDoctorMsg(now, message, "Doctor", senderName);
 								sent = 1;
@@ -288,8 +290,7 @@ public class DoctorPortal extends Main{
 					error.setFill(Color.GREEN);
 					error.setText("Message Sent");
 					to.setText("Firstname Lastname");
-					comp_msg.setText("Message Content");
-					
+					compose.setText("New Message");
 				}
 				
 			}		
