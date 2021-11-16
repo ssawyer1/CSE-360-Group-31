@@ -265,22 +265,47 @@ public class PatientPortal extends Main
 		submit.setMaxSize(100, 20); // set size
 		submit.setStyle("-fx-background-radius: 5"); // round button edges
 		//if button is clicked update the patient info
-		submit.setOnAction(e-> {
-			if(update(name, address, mobile, email, error, curPatient, info))
+		submit.setOnMouseClicked(e-> 
+		{
+			//check that button was pressed once
+			if(e.getClickCount() >= 1)
 			{
-				String tempName = name.getText();
-				String[] splitFullName = tempName.split("\\s+");
-				curPatient.setFName(splitFullName[0]);
-				curPatient.setLName(splitFullName[1]);
-				curPatient.setPharm(address.getText());
-				curPatient.setPhoneNum(mobile.getText());
-				curPatient.setEmail(email.getText());
-				//trying to save updated info but it didn't work, will come back
-				try {
-					curPatient.save();
-				} catch (IOException x) {
-					// TODO Auto-generated catch block
-					x.printStackTrace();
+				//error catching to prevent repeats
+				if(name.getText().equals(curPatient.getFullName()))
+				{
+					error.setText("Name is already the same");
+				}
+				else if(address.getText().equals(curPatient.getPharm()))
+				{
+					error.setText("Address is already the same");
+				}
+				else if(mobile.getText().equals(curPatient.getPhoneNum()))
+				{
+					error.setText("Phone number is already the same");
+				}
+				else if(email.getText().equals(curPatient.getEmail()))
+				{
+					error.setText("Email is already the same");
+				}
+				//otherwise update the contact information
+				else
+				{
+					//set the content
+					info.setText(name.getText() + "\nAddress: " + address.getText() + "\nMobile Phone: " + mobile.getText() + "\nEmail: " + email.getText()); 
+					String tempName = name.getText();
+					String[] splitFullName = tempName.split("\\s+");
+					curPatient.setFName(splitFullName[0]);
+					curPatient.setLName(splitFullName[1]);
+					curPatient.setPharm(address.getText());
+					curPatient.setPhoneNum(mobile.getText());
+					curPatient.setEmail(email.getText());
+					//save updated info to file
+					try {
+						curPatient.save();
+					} catch (IOException x) {
+						// TODO Auto-generated catch block
+						x.printStackTrace();
+					}
 				}
 			}
 			
@@ -361,31 +386,5 @@ public class PatientPortal extends Main
 		Scene h = home.firstScreen(stage);
 		stage.setScene(h);
 	}
-	//method to update the information displayed
-	private boolean update(TextArea name, TextArea address, TextArea mobile, TextArea email, Text error, Patient patient, TextArea info)
-	{
-		boolean test = false;
-		if(name.getText().equals(patient.getFullName()))
-		{
-			error.setText("Name is already the same");
-		}
-		else if(address.getText().equals(patient.getPharm()))
-		{
-			error.setText("Address is already the same");
-		}
-		else if(mobile.getText().equals(patient.getPhoneNum()))
-		{
-			error.setText("Phone number is already the same");
-		}
-		else if(email.getText().equals(patient.getEmail()))
-		{
-			error.setText("Email is already the same");
-		}
-		else
-		{
-			info.setText(name.getText() + "\nAddress: " + address.getText() + "\nMobile Phone: " + mobile.getText() + "\nEmail: " + email.getText()); // set content
-			test = true;
-		}
-		return test;
-	}
+	
 }
