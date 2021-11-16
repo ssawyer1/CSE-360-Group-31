@@ -2,6 +2,10 @@ package application; // javaFX
 
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.geometry.Insets;
@@ -47,11 +52,59 @@ public class PatientPortal extends Main
 		Text inbox = new Text("Inbox"); //Text on top
 		inbox.setFont(Font.font("Courier", FontWeight.MEDIUM, 30)); 
 		
-		ListView<String> listview = new ListView<String>(); //Listview in middle
+		//ListView<String> listview = new ListView<String>(); //Listview in middle
 		//Message m_obj1 = new Message("Message here");
 		//Message m_obj2 = new Message("Another message here");
 		//ObservableList<String> msgList = FXCollections.observableArrayList(m_obj1.getMessage(), m_obj2.getMessage());
 		//listview.setItems(msgList);
+		TableView<Message> messageTable = new TableView<Message>(); //create table
+		messageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		
+		TableColumn <Message, String> m_column1 = new TableColumn<>("From"); //From sendName column
+		m_column1.setCellValueFactory(new PropertyValueFactory<>("sendName"));
+		m_column1.setStyle("-fx-alignment: CENTER;");
+	
+		TableColumn <Message, String> m_column2 = new TableColumn<>("Message");//Column showing message content
+		m_column2.setCellValueFactory(new PropertyValueFactory<>("message"));
+		m_column2.setStyle("-fx-alignment: CENTER;");
+		
+		TableColumn <Message, String> m_column3 = new TableColumn<>("Date");//Column showing message date
+		m_column3.setCellValueFactory(new PropertyValueFactory<>("date"));
+		m_column3.setStyle("-fx-alignment: CENTER;");
+		
+		//adding columns to table
+		messageTable.getColumns().add(m_column1);
+		messageTable.getColumns().add(m_column2);
+		messageTable.getColumns().add(m_column3);
+		
+		//testing this example
+		curPatient.addDoctorMsg(LocalDateTime.now(), curPatient.getDoctorName(), "doctor", "bob smith");
+		curPatient.addNurseMsg(LocalDateTime.now(), "Sup", "nurse", "nancy smith");
+		
+		//traverse through doctors messages
+		for(Message m: curPatient.getDoctorMsg())
+		{
+			if(m.getSendName().equalsIgnoreCase(curPatient.getFullName()) == false) //only displaying incoming messages
+			{
+				//add message to table
+				messageTable.getItems().add(m);
+			}
+		}
+		//traverse through nurse messages
+		for(Message x: curPatient.getNurseMsgs())
+		{
+			if(x.getSendName().equalsIgnoreCase(curPatient.getFullName()) == false) //only displaying incoming messages
+			{
+				//add message to table
+				messageTable.getItems().add(x);
+			}
+		}
+		//sending messages section
+		Text to_msg = new Text("To:"); //Text on top
+		to_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 15)); 
+		
+		TextArea to = new TextArea();//Area to type in receiver's name
+		to.setText("Firstname Lastname");
 		
 		Text comp_msg = new Text("Compose Message"); //Text on top
 		comp_msg.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); 
@@ -59,15 +112,50 @@ public class PatientPortal extends Main
 		TextArea compose = new TextArea();
 		compose.setText("New Message");
 		
-		BorderPane.setAlignment(listview, Pos.CENTER);
-		BorderPane.setMargin(listview, new Insets(100, 50, 100, 50));
+		BorderPane.setAlignment(messageTable, Pos.CENTER);
+		BorderPane.setMargin(messageTable, new Insets(100, 50, 100, 50));
 		
+		//button to send message
 		Button send = new Button("  Send  ");
 		BorderPane.setAlignment(send, Pos.BOTTOM_LEFT);
 		BorderPane.setMargin(send, new Insets(20, 0, 20, 0));
 		msgPane.setBottom(send);
+		
+		//creating error text
+		Text errorMsg = new Text();
+		errorMsg.setFont(Font.font("Courier", 15));
+		
+		
+		send.setOnMouseClicked(e -> 
+		{
+			if(e.getClickCount() >= 1)
+			{
+				String senderName = to.getText(); //extracting patient name and message content
+				String message = compose.getText();
+				int sent = 0;
+				if(senderName.equalsIgnoreCase(curPatient.getDoctorName()))
+				{
+						curPatient.addDoctorMsg(LocalDateTime.now(), message, "Patient", senderName);
+						sent = 1;
+				}
+				if(sent == 0)
+				{	
+					errorMsg.setFill(Color.DARKRED);
+					errorMsg.setText("Doctor not found");
+				}
+				else
+				{
+					errorMsg.setFill(Color.GREEN);
+					errorMsg.setText("Message Sucessfully Sent");
+					to.setText("Firstname Lastname");
+					compose.setText("Message Content");
+					
+				}
+			}
+		}
+		);
 
-		vbox.getChildren().addAll(inbox, listview, comp_msg, compose);	
+		vbox.getChildren().addAll(inbox, messageTable, comp_msg, to_msg, to, compose, errorMsg);	
 
 		//******************VISITS PANE*********************
 		BorderPane vPane = new BorderPane();
@@ -91,6 +179,12 @@ public class PatientPortal extends Main
 		column1.setResizable(false);
 		visitsTable.getColumns().add(column1);
 		
+		//curPatient.addAppointment(LocalDateTime.now(),"x","y","c","9","9","9","9");
+		/*ArrayList<Appointment> tempApt = curPatient.getAptts();
+		ObservableList<Appointment> obsApt = FXCollections.<Appointment>observableArrayList();
+		obsApt.addAll(tempApt);
+		visitsTable.setItems(obsApt);*/
+		
 		TableColumn <Appointment, String> column2 = new TableColumn<>("Description");
 		column2.setCellValueFactory(new PropertyValueFactory<>("reason"));
 		column2.setStyle("-fx-alignment: CENTER;");
@@ -104,6 +198,21 @@ public class PatientPortal extends Main
 		column3.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.4));
 		column3.setResizable(false);	
 		visitsTable.getColumns().add(column3);
+		//ArrayList<Appointment> temp
+		
+		//add the patients previous appointment descriptions to the table
+		for (Appointment a: curPatient.getAptts())
+		{
+			if(a != null)
+			{
+				visitsTable.getItems().add(a);
+			}
+		}
+		//add immunizations to the table
+		/*ArrayList<Prescription> tempPre = curPatient.getPrescription();
+		ObservableList<Prescription> obsPre = FXCollections.<Prescription>observableArrayList();
+		obsPre.addAll(tempPre);
+		visitsTable.setItems(obsPre);*/
 		
 		//visitsTable.getItems().add(new Appointment("Date here", "Appointment description here", "Patient Notes Here"));
 		//visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here", "Additonal Patient Notes Here"));
@@ -125,7 +234,9 @@ public class PatientPortal extends Main
 		// create text area to hold information
 		TextArea info = new TextArea(); // create
 		info.setFont(Font.font("Courier", 25)); // set font
-		info.setText("John Doe\nAddress: 1234 W Loma Lane\nMobile Phone: 623-908-0456\nHome Phone: 623-657-0223\nEmail: username@gmail.com"); // set content
+		String user = curPatient.getUsername();
+		curPatient.load("Patients/" + user + ".txt");
+		info.setText(curPatient.getFullName() + "\nAddress: " + curPatient.getPharm() + "\nMobile Phone: " + curPatient.getPhoneNum() + "\nEmail: " + curPatient.getEmail()); // set content
 		info.setEditable(false); // disallow edit
 		info.setMaxSize(550, 200); // set size
 		
@@ -134,24 +245,51 @@ public class PatientPortal extends Main
 		edit.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); // set font
 		
 		// create text areas for editable information
+		TextArea name = new TextArea();
 		TextArea address = new TextArea();
 		TextArea mobile = new TextArea();
-		TextArea home = new TextArea();
 		TextArea email = new TextArea();
+		name.setMaxSize(400, 20);
 		address.setMaxSize(400, 20);
 		mobile.setMaxSize(400, 20);
-		home.setMaxSize(400, 20);
 		email.setMaxSize(400, 20);
+		
+		//creating error text
+		Text error = new Text();
+		error.setFont(Font.font("Courier", 15));
+		error.setFill(Color.DARKRED);
 		
 		// create button to submit information
 		Button submit = new Button("Submit");
 		submit.setMaxSize(100, 20); // set size
 		submit.setStyle("-fx-background-radius: 5"); // round button edges
+		//if button is clicked update the patient info
+		submit.setOnAction(e-> {
+			if(update(name, address, mobile, email, error, curPatient, info))
+			{
+				String tempName = name.getText();
+				String[] splitFullName = tempName.split("\\s+");
+				curPatient.setFName(splitFullName[0]);
+				curPatient.setLName(splitFullName[1]);
+				curPatient.setPharm(address.getText());
+				curPatient.setPhoneNum(mobile.getText());
+				curPatient.setEmail(email.getText());
+				//trying to save updated info but it didn't work, will come back
+				try {
+					curPatient.save();
+				} catch (IOException x) {
+					// TODO Auto-generated catch block
+					x.printStackTrace();
+				}
+			}
+			
+		});
+		
 		
 		// create vbox to hold left information
 		VBox subLeft = new VBox();
 		subLeft.setSpacing(20); // spacing between objects in vbox
-		subLeft.getChildren().addAll(info,edit, address, mobile, home, email, submit); // add objects
+		subLeft.getChildren().addAll(info,edit, name, address, mobile, email, submit, error); // add objects
 		subLeft.setAlignment(Pos.TOP_CENTER); // align at center
 		
 		// create hbox to hold left information and right picture
@@ -221,5 +359,32 @@ public class PatientPortal extends Main
 		HomeScreen home = new HomeScreen();
 		Scene h = home.firstScreen(stage);
 		stage.setScene(h);
+	}
+	//method to update the information displayed
+	private boolean update(TextArea name, TextArea address, TextArea mobile, TextArea email, Text error, Patient patient, TextArea info)
+	{
+		boolean test = false;
+		if(name.getText().equals(patient.getFullName()))
+		{
+			error.setText("Name is already the same");
+		}
+		else if(address.getText().equals(patient.getPharm()))
+		{
+			error.setText("Address is already the same");
+		}
+		else if(mobile.getText().equals(patient.getPhoneNum()))
+		{
+			error.setText("Phone number is already the same");
+		}
+		else if(email.getText().equals(patient.getEmail()))
+		{
+			error.setText("Email is already the same");
+		}
+		else
+		{
+			info.setText(name.getText() + "\nAddress: " + address.getText() + "\nMobile Phone: " + mobile.getText() + "\nEmail: " + email.getText()); // set content
+			test = true;
+		}
+		return test;
 	}
 }
