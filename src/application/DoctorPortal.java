@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -38,9 +39,9 @@ public class DoctorPortal extends Main{
     
 		//**************** Patient Tab *****************
 		BorderPane bp = new BorderPane();
+		bp.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
 		GridPane gp = new GridPane();
 		gp.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
-		gp.setPadding(new Insets(0, 50, 50, 50)); 
 		
 		Tab patientInfo = new Tab("\t\t\t\t        Patient Info");
 		Tab appointmentHistory= new Tab("\t\t\t\tAppointment History");
@@ -55,14 +56,17 @@ public class DoctorPortal extends Main{
 		// Formatting for table that goes on the patientInfo tab, this table takes objects from the Patient class
 		TableView<Patient> patientTable = new TableView<Patient>(); //create table
 		patientTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		patientTable.setPrefSize(750, 550);
 		
 		TableColumn <Patient, String> p_column1 = new TableColumn<>("First Name");
 		p_column1.setCellValueFactory(new PropertyValueFactory<>("fName"));
 		p_column1.setStyle("-fx-alignment: CENTER;");
 	
+	
 		TableColumn <Patient, String> p_column2 = new TableColumn<>("Last Name");
 		p_column2.setCellValueFactory(new PropertyValueFactory<>("lName"));
 		p_column2.setStyle("-fx-alignment: CENTER;");
+
 		
 		patientTable.getColumns().add(p_column1);
 		patientTable.getColumns().add(p_column2);
@@ -73,20 +77,23 @@ public class DoctorPortal extends Main{
 		}
 		
 		
-		VBox pBox = new VBox();
-		pBox.getChildren().addAll(patientTable);
-		pBox.setSpacing(10);
-		pBox.setAlignment(Pos.TOP_LEFT);
-		pBox.setPrefHeight(600);
-		pBox.setPrefWidth(600);
+		Group group = new Group(patientTable);
+		 VBox.setVgrow( group, Priority.NEVER );
+		 VBox root = new VBox(group);
+		 root.setPadding(new Insets(10, 15, 0, 15));
+		
 		
 		GridPane details = new GridPane();
-		details.setHgap(5); //horizontal gap in pixels => that's what you are asking for
+		details.setHgap(15); //horizontal gap in pixels => that's what you are asking for
 		details.setVgap(5); //vertical gap in pixels
-		
+
 		ListView<String> prescriptionList = new ListView<String>();
+		VBox listBox = new VBox();
+		listBox.setPrefSize(350, 200);
+		listBox.getChildren().add(prescriptionList);
 		
 		Text pInfo = new Text("Patient Info");
+		Text prescriptions = new Text("Patient's Prescriptions");
 		
 		Text email = new Text("Email:");
 		Text number = new Text("Number:");
@@ -97,6 +104,7 @@ public class DoctorPortal extends Main{
 		Text nurse = new Text("Assigned Nurse: ");
 		
 		pInfo.setFont(Font.font("Courier", FontWeight.BOLD, 30)); 
+		prescriptions.setFont(Font.font("Courier", 20));
 		email.setFont(Font.font("Courier", 20));
 		number.setFont(Font.font("Courier", 20));
 		birth.setFont(Font.font("Courier", 20));
@@ -129,6 +137,8 @@ public class DoctorPortal extends Main{
 		details.add(inCo, 1, 6);
 		details.add(inNum, 1, 7);
 		details.add(nurse, 1, 8);
+		details.add(prescriptions, 1, 9);
+		details.add(listBox, 1, 10);
 		details.add(newEmail, 3, 2);
 		details.add(newNumber, 3, 3);
 		details.add(newBirth, 3, 4);
@@ -136,7 +146,9 @@ public class DoctorPortal extends Main{
 		details.add(newInCo, 3, 6);
 		details.add(newInNum, 3, 7);
 		details.add(newNurse, 3, 8);
+	
 		details.setAlignment(Pos.TOP_LEFT);
+				
 		patientTable.setOnMouseClicked(e -> {
 			if (e.getClickCount() >= 1) {
 				prescriptionList.getItems().clear();
@@ -157,10 +169,9 @@ public class DoctorPortal extends Main{
 				}
 			}		
 		});
-		bp.setLeft(pBox);
-		BorderPane.setAlignment(details, Pos.CENTER_LEFT);
+		
+		bp.setLeft(root);		
 		bp.setCenter(details);
-		bp.setRight(prescriptionList);
 		patientInfo.setContent(bp);
 		
 		//************Appointment History Tab**************
