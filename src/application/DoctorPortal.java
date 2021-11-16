@@ -38,6 +38,7 @@ public class DoctorPortal extends Main{
 	protected Scene doctorScene(Stage stage, Doctor curDoctor) {
     
 		//**************** Patient Tab *****************
+		LocalDateTime curTime = LocalDateTime.now();
 		BorderPane bp = new BorderPane();
 		bp.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
 		GridPane gp = new GridPane();
@@ -151,7 +152,7 @@ public class DoctorPortal extends Main{
 				
 		patientTable.setOnMouseClicked(e -> {
 			if (e.getClickCount() >= 1) {
-				prescriptionList.getItems().clear();
+				
 				if (patientTable.getSelectionModel().getSelectedItem() != null) 
 				{
 					Patient p = patientTable.getSelectionModel().getSelectedItem();
@@ -162,11 +163,14 @@ public class DoctorPortal extends Main{
 					newInCo.setText(p.getInsurCo());
 					newInNum.setText(p.getInsurNum());
 					newNurse.setText(p.getNurseName());		
+					p.addPrescription("Ibuprofen", curTime, "Take once per day", "Stop when pain is gone");
 					for(Prescription prescription : p.getPrescriptions())
 					{
+						prescriptionList.getItems().clear();
 						prescriptionList.getItems().addAll(prescription.getType());
 					}
-				}
+					
+				}				
 			}		
 		});
 		
@@ -294,17 +298,17 @@ public class DoctorPortal extends Main{
 						if(recieverName.equalsIgnoreCase(p.getFullName()))
 							{
 								p.addDoctorMsg(now, message, "Doctor", senderName);
-								sent = 1;
+								sent = 1;							
 							}
 					}
 				if(sent == 0)
 				{	
-					error.setFill(Color.RED);
+					error.setFill(Color.DARKRED);
 					error.setText("Patient not found");
 				}
 				else
 				{
-					error.setFill(Color.GREEN);
+					error.setFill(Color.DARKGREEN);
 					error.setText("Message Sent");
 					to.setText("Firstname Lastname");
 					compose.setText("New Message");

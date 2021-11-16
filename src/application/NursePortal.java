@@ -1,8 +1,12 @@
 package application;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -40,28 +44,30 @@ public class NursePortal extends Main{
 		
 		//************************Home Pane (Tab1)***********************
 		//Where the nurse takes in the patients information
+		//Search Patient array for a name matching the enteDARKRED names in the fields
+		//update that patient's info 
+		//create a new appointment on that patient's object
+		//save to file
+		LocalDateTime curTime = LocalDateTime.now();
+	    	    
 		BorderPane homePane = new BorderPane();
 		homePane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;");
 	    GridPane homeGrid = new GridPane(); //goes inside borderpane
 	    homeGrid.setHgap(50); //horizontal gap in pixels => that's what you are asking for
-	    homeGrid.setVgap(20); //vertical gap in pixels
-	       
-	    CheckBox newPatient = new CheckBox();	    
-	    CheckBox olderCheck = new CheckBox();
-	    
-	    Text home = new Text("Home");
+	    homeGrid.setVgap(20); //vertical gap in pixels    	    
+	    Text home = new Text("Patient Check Up");
 	    Text date = new Text("Date:");
 	    Text reason = new Text("Reason:");
 	    Text firstName = new Text("First Name: ");	   
 	    Text lastName = new Text("Last Name: ");	    
 	    Text weightText = new Text("1) Enter the Patient's weight:");
 	    Text heightText = new Text("2) Enter the Patient's height:");
-	    Text bloodText = new Text("3) Enter the Patient's blood pressure:");
+	    Text bloodText = new Text("3) Enter the Patient's blood pressure (if applicable):");
 	    Text tempText = new Text("4) Enter the Patient's body temperature:");
-	    Text olderTextCheck = new Text("Is the Patient older then 12?");
-		Text newPatientText = new Text("Is this a new Patient?");
 	    Text notes = new Text("Additional Notes");
-	  
+	    Text nameError = new Text();
+	    
+	    
 	    TextField dateField = new TextField();
 	    TextField reasonField = new TextField();
 	    TextField lastNameField = new TextField();
@@ -71,10 +77,53 @@ public class NursePortal extends Main{
 	    TextField bloodField = new TextField();
 	    TextField tempField = new TextField();
 
-	    TextArea noteSpace= new TextArea("Type here");
+	    TextArea noteSpace= new TextArea();
 	    noteSpace.setPrefSize(650,  300);
 	    
+		/*Pateint Parameters : String fname, String lname, String user, String pass, String Email, String phone, String pharmacyLoc, 
+		String  DOB, String Gender, String insurCo, String insurGr, String insurName, String insurNum*/ 
 	    Button submit = new Button("Submit");
+	    submit.setOnMouseClicked(e -> {
+	    	if (e.getClickCount() >= 1) {
+	    		if (((firstNameField.getText().trim().equals("")) || (lastNameField.getText().trim().equals(""))))
+		    	{
+		    		nameError.setFill(Color.DARKRED);
+		    		nameError.setFont(Font.font("Courier", 15));
+		    		nameError.setText("Error: Please enter a first and last name in the correct fields");
+		    	}
+		    	else
+		    	{
+		    		nameError.setFill(Color.DARKRED);
+		    		nameError.setFont(Font.font("Courier", 15));
+					nameError.setText("Error: Invalid Name format or Patient does not yet have an account");
+		    	}
+	    		for(Doctor d : curNurse.getDoctors())
+	    		{
+	    		    for(Patient p : d.getPatients())
+	    		    {
+	    		    	if (firstNameField.getText().trim().equals(p.getFName()) && lastNameField.getText().trim().equals(p.getLName()))
+	    		    	{	    		    
+	    		    		p.addAppointment(curTime, reasonField.getText().trim(), noteSpace.getText().trim(), noteSpace.getText().trim(),
+	    		    						heightField.getText().trim(), weightField.getText().trim(), bloodField.getText().trim(), tempField.getText().trim()); 	    		    	       		    	    
+	    		    	    try 
+	    		    	    {
+	    		    	    	p.save();
+	    		    	    	nameError.setFill(Color.DARKGREEN);
+	    		    	    	nameError.setFont(Font.font("Courier", 15));
+	    		    	    	nameError.setText("Patient's Information Stored Successefully");
+	    		    	    } 
+	    		    	    catch (IOException x) 
+	    		    	    {
+	    		    	    	// TODO Auto-generated catch block
+	    		    	    	x.printStackTrace();
+	    		    	    }
+	    		    	}
+	    		    	
+	    		     }
+	    		 }
+	    		    	    							
+	    	}		
+	   });
 	    
 	    home.setFont(Font.font("Courier", FontWeight.BOLD, 30)); 
 	    date.setFont(Font.font("Courier", 20));
@@ -85,35 +134,33 @@ public class NursePortal extends Main{
 		heightText.setFont(Font.font("Courier", 20));
 		bloodText.setFont(Font.font("Courier", 20));
 		tempText.setFont(Font.font("Courier", 20));
-		olderTextCheck.setFont(Font.font("Courier", 20));
+				
 		notes.setFont(Font.font("Courier", 20));
 		noteSpace.setFont(Font.font("Courier", 20));
-		newPatientText.setFont(Font.font("Courier", 20));
+
 	      
 	    homeGrid.add(home, 1, 0);
-	    homeGrid.add(newPatientText, 1, 1);
+
 		homeGrid.add(firstName, 1, 2);
 		homeGrid.add(lastName, 1, 3);
 		homeGrid.add(weightText, 1, 4);
 		homeGrid.add(heightText, 1, 5);
 		
-		homeGrid.add(newPatient, 2, 1);
 		homeGrid.add(firstNameField,2,2);
 		homeGrid.add(lastNameField,2,3);
 		homeGrid.add(weightField,2,4);
 		homeGrid.add(heightField,2,5);
 		
-		homeGrid.add(olderTextCheck,3,1);
 		homeGrid.add(date, 3, 2);
 		homeGrid.add(reason, 3, 3);
 		homeGrid.add(bloodText, 3, 4);
 		homeGrid.add(tempText, 3, 5);
 		
-		homeGrid.add(olderCheck, 4, 1);
 		homeGrid.add(dateField, 4, 2);
 		homeGrid.add(reasonField, 4, 3);
 		homeGrid.add(bloodField, 4, 4);
 		homeGrid.add(tempField, 4, 5);
+	
 		
 		GridPane bottomPane = new GridPane();
 		bottomPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;");
@@ -122,8 +169,9 @@ public class NursePortal extends Main{
 		
 		bottomPane.add(notes, 1, 0);
 		bottomPane.add(noteSpace, 1, 1);
-		bottomPane.add(submit, 1, 2);
-	
+		bottomPane.add(submit, 1, 2); 	
+		bottomPane.add(nameError, 1, 3);
+    		    	      	    	 	    	       	
 		homePane.setTop(homeGrid);
 		homePane.setCenter(bottomPane);
 
@@ -132,8 +180,7 @@ public class NursePortal extends Main{
 		bp.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
 		GridPane gp = new GridPane();
 		gp.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
-		
-		
+
 		// Formatting for table that goes on the patientInfo tab, this table takes objects from the Patient class
 		
 		TableView<Patient> patientTable = new TableView<Patient>(); //create table
@@ -144,12 +191,10 @@ public class NursePortal extends Main{
 		p_column1.setCellValueFactory(new PropertyValueFactory<>("fName"));
 		p_column1.setStyle("-fx-alignment: CENTER;");
 	
-	
 		TableColumn <Patient, String> p_column2 = new TableColumn<>("Last Name");
 		p_column2.setCellValueFactory(new PropertyValueFactory<>("lName"));
 		p_column2.setStyle("-fx-alignment: CENTER;");
 
-		
 		patientTable.getColumns().add(p_column1);
 		patientTable.getColumns().add(p_column2);
 		
@@ -161,11 +206,10 @@ public class NursePortal extends Main{
 			}
 		}
 		
-		 Group group = new Group(patientTable);
-		 VBox.setVgrow( group, Priority.NEVER );
-		 VBox root = new VBox(group);
-		 root.setPadding(new Insets(10, 15, 0, 15));
-		
+		Group group = new Group(patientTable);
+		VBox.setVgrow( group, Priority.NEVER );
+		VBox root = new VBox(group);
+		root.setPadding(new Insets(10, 15, 0, 15));
 		
 		GridPane details = new GridPane();
 		details.setHgap(15); //horizontal gap in pixels => that's what you are asking for
@@ -356,12 +400,12 @@ public class NursePortal extends Main{
 					}
 				if(sent == 0)
 				{	
-					error.setFill(Color.RED);
+					error.setFill(Color.DARKRED);
 					error.setText("Patient not found");
 				}
 				else
 				{
-					error.setFill(Color.GREEN);
+					error.setFill(Color.DARKGREEN);
 					error.setText("Message Sent");
 					to.setText("Firstname Lastname");
 					compose.setText("New Message");
@@ -378,7 +422,7 @@ public class NursePortal extends Main{
 		Tab portal = new Tab("   Nurse Portal");
 		Tab tab1 = new Tab("\t\t\t\t\t    Home");
 	    Tab tab2 = new Tab("\t\t\t\t\t   Patient"); // tabbed to center	
-	    Tab tab3 = new Tab("\t\t\t\t   Doctor's Messages"); // tabbed to center
+	    Tab tab3 = new Tab("\t\t\t\t   Nurse's Messages"); // tabbed to center
 	    portal.setDisable(true); // disable portal table 
 
 	    // format tabs

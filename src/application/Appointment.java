@@ -20,6 +20,7 @@ public class Appointment
 	{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");  
 		this.date = dtf.format(dateCreated);
+
 		this.reason = reason;
 		this.doctorNotes = docNotes;
 		this.nurseNotes = nNotes;
@@ -28,7 +29,6 @@ public class Appointment
 		this.bloodPressure = bp;
 		this.temp = temperature;
 	}
-	
 	public String getDate()
 	{
 		return this.date;

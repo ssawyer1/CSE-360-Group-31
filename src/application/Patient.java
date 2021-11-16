@@ -74,7 +74,8 @@ public class Patient
 	}
 	
 	// constructor for initial creation when registering
-	public Patient(String fname, String lname, String user, String pass, String Email, String phone, String pharmacyLoc, String  DOB, String Gender, String insurCo, String insurGr, String insurName, String insurNum)
+	public Patient(String fname, String lname, String user, String pass, String Email, String phone, String pharmacyLoc, 
+							String  DOB, String Gender, String insurCo, String insurGr, String insurName, String insurNum)
 	{
 		this.fName = fname;
 		this.lName = lname;

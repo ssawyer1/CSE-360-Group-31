@@ -1,7 +1,0 @@
-Active=true
-Username=w
-Password=w
-FirstName=test
-LastName=nurse
-Email=fakeemail@gmail.com
-Phone=228288282
