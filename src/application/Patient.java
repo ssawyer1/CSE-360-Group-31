@@ -286,8 +286,8 @@ public class Patient
 		this.prescriptions.add(new Prescription(type,taken, dir, stopdate));
 	}
 	
-	public void addAppointment(LocalDateTime dateCreated, String reason, String docNotes, String nNotes, String hght, String wght, String bp, String temperature) {
-		this.appointments.add(new Appointment(dateCreated, reason, docNotes, nNotes, hght, wght, bp, temperature));
+	public void addAppointment(LocalDateTime dateCreated, String reason, String docNotes, String nNotes, String hght, String wght, String bp, String temperature, String prescripTime) {
+		this.appointments.add(new Appointment(dateCreated, reason, docNotes, nNotes, hght, wght, bp, temperature, prescripTime));
 	}
 	
 	private int calcAge(String dob)
@@ -355,6 +355,7 @@ public class Patient
 			of.println("Temp=" + appointments.get(i).getTemp());
 			of.println("DoctorNotes=" + appointments.get(i).getDoctorNotes());
 			of.println("NurseNotes=" + appointments.get(i).getNurseNotes());
+			of.println("PrescriptionDate=" + appointments.get(i).getPrescipTime());
 		}
 		
 		// immunizations
@@ -441,6 +442,7 @@ public class Patient
 					appointments.get(i).setTemp(loadProperty(bf, "Temp"));
 					appointments.get(i).setDocNotes(loadProperty(bf, "DoctorNotes"));
 					appointments.get(i).setNNotes(loadProperty(bf, "NurseNotes"));
+					appointments.get(i).setPrescripDate(loadProperty(bf, "PrescriptionDate"));
 				}
 			}
 			// load immunizations

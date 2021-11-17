@@ -2,6 +2,9 @@ package application; // application
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -125,7 +128,7 @@ public class CreateAccount extends Main
 		
 		if(type.equalsIgnoreCase("patient"))
 		{
-			Text date = new Text("Date of Birth (XX/XX/XX)");
+			Text date = new Text("Date of Birth (MM/DD/YYYY)");
 			date.setFont(Font.font("Courier", 15));
 			
 			dob = new TextArea();
@@ -235,8 +238,26 @@ public class CreateAccount extends Main
 		String fileName = ("Patients/".concat(user.getText()).concat(".txt"));
 		File tempFile = new File(fileName);
 		boolean exists = tempFile.exists();
+		boolean invalidDate = false;
+		if(type.equalsIgnoreCase("patient"))
+		{
+			try
+			{
+				String[] splitString = dob.getText().split("/");
+				int month = Integer.parseInt(splitString[0]);
+				int day = Integer.parseInt(splitString[1]);
+				int year = Integer.parseInt(splitString[2]);
+				LocalDate currentDay = LocalDate.now();
+				LocalDate birthday = LocalDate.of(year, month, day);
+				Period patientAge = Period.between(birthday, currentDay);
+			}
+			catch (Exception e)
+			{
+				invalidDate = true;
+			}
+		}
+		
 		//store date in string to traverse
-		String date = dob.getText();
 		if(exists == true)
 		{
 			error.setText("Username is already in use.");
@@ -247,9 +268,9 @@ public class CreateAccount extends Main
 			error.setText("Passwords do not match.");
 		}
 		//if dob not in correct format
-		else if(date.charAt(2) != '/' || date.charAt(5) != '/')
+		else if(invalidDate == true)
 		{
-			error.setText("Worng format for date");
+			error.setText("Invalid date format. Please enter in MM/DD/YYYY format");
 		}
 		else
 		{

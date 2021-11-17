@@ -180,6 +180,7 @@ public class PatientPortal extends Main
 		//visitsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		visitsTable.setMaxSize(550, 550);
 		visitsTable.setMinSize(550, 550);
+				
 		//add columns to table
 		TableColumn <Appointment, String> column1 = new TableColumn<>("Date");
 		column1.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -212,6 +213,8 @@ public class PatientPortal extends Main
 			}
 		}
 		
+		visitsTable.getSelectionModel().selectFirst();
+		
 		visitsTable.setOnMouseClicked(e -> {
 			if (e.getClickCount() >= 1) {
 				if (visitsTable.getSelectionModel().getSelectedItem() != null) 
@@ -222,6 +225,10 @@ public class PatientPortal extends Main
 		});
 		
 		vPane.setLeft(visitsTable);
+		if (visitsTable.getSelectionModel().getSelectedItem() != null) 
+		{
+			vPane.setCenter(getInfo(visitsTable.getSelectionModel().getSelectedItem()));
+		}
 		
 	    //*********************INFORMATION PANE*********************************
 		// create border pane
@@ -471,22 +478,22 @@ public class PatientPortal extends Main
 		dnotes.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
 		dnotes.setEditable(false);
 		
-//		Text meds = new Text("Prescribed Medication: ");
-//		meds.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
-//		TextArea medsPrescribed = new TextArea();
-//		medsPrescribed.setEditable(false);
-//		medsPrescribed.setMinSize(500, 100);
-//		medsPrescribed.setMaxSize(500, 100);
-//		medsPrescribed.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
-//		for(int i = 0; i < curPatient.getPrescriptions().size(); i++)
-//		{
-//			if(curPatient.getPrescriptions().get(i).getDate().equalsIgnoreCase(appt.getDate()))
-//			{
-//				medsPrescribed.appendText(curPatient.getPrescriptions().get(i).getType());
-//				medsPrescribed.appendText("\n\tDirections: " + curPatient.getPrescriptions().get(i).getDir());
-//				medsPrescribed.appendText("\n\tStop Date: " + curPatient.getPrescriptions().get(i).getStopDate() + "\n\n");
-//			}
-//		}
+		Text meds = new Text("Prescribed Medication: ");
+		meds.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		TextArea medsPrescribed = new TextArea();
+		medsPrescribed.setEditable(false);
+		medsPrescribed.setMinSize(500, 100);
+		medsPrescribed.setMaxSize(500, 100);
+		medsPrescribed.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		for(int i = 0; i < curPatient.getPrescriptions().size(); i++)
+		{
+			if(curPatient.getPrescriptions().get(i).getDate().equalsIgnoreCase(appt.getPrescipTime()))
+			{
+				medsPrescribed.appendText(curPatient.getPrescriptions().get(i).getType());
+				medsPrescribed.appendText("\n\tDirections: " + curPatient.getPrescriptions().get(i).getDir());
+				medsPrescribed.appendText("\n\tStop Date: " + curPatient.getPrescriptions().get(i).getStopDate() + "\n\n");
+			}
+		}
 		
 		Text vaxs = new Text("Vaccines Given: ");
 		vaxs.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
@@ -503,8 +510,7 @@ public class PatientPortal extends Main
 			}
 		}
 		
-		//holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, meds, medsPrescribed, vaxs, vaxPrescribed);
-		holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, vaxs, vaxPrescribed);
+		holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, meds, medsPrescribed, vaxs, vaxPrescribed);
 		scrollAppts.setContent(holder);
 		
 		TabPane newTabs = new TabPane();

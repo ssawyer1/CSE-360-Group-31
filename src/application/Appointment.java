@@ -14,6 +14,7 @@ public class Appointment
 	private String temp;
 	private String doctorNotes;
 	private String nurseNotes;
+	private String prescripTime;
 	
 	Appointment(){  
 		this.date = " ";
@@ -24,12 +25,14 @@ public class Appointment
 		this.weight = " ";
 		this.bloodPressure = " ";
 		this.temp = " ";
+		this.prescripTime = " ";
 	}
 	
-	public Appointment(LocalDateTime dateCreated, String reason, String docNotes, String nNotes, String hght, String wght, String bp, String temperature)
+	public Appointment(LocalDateTime dateCreated, String reason, String docNotes, String nNotes, String hght, String wght, String bp, String temperature, String prescripGiven)
 	{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");  
 		this.date = dtf.format(dateCreated);
+		this.prescripTime = " ";
 		this.reason = reason;
 		this.doctorNotes = docNotes;
 		this.nurseNotes = nNotes;
@@ -42,6 +45,11 @@ public class Appointment
 	public String getDate()
 	{
 		return this.date;
+	}
+	
+	public String getPrescipTime()
+	{
+		return this.prescripTime;
 	}
 	
 	public String getReason()
@@ -81,6 +89,11 @@ public class Appointment
 	public void setDate(String newDate)
 	{
 		this.date = newDate;
+	}
+	
+	public void setPrescripDate(String newDate)
+	{
+		this.prescripTime = newDate;
 	}
 	
 	public void setReason(String newReason)

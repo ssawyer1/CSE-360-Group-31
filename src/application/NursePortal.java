@@ -298,7 +298,7 @@ public class NursePortal extends Main{
 	    		    	if (firstNameField.getText().trim().equals(p.getFName()) && lastNameField.getText().trim().equals(p.getLName()))
 	    		    	{	    		    
 	    		    		p.addAppointment(curTime, reasonField.getText().trim(), " ", noteSpace.getText().trim(),
-	    		    						heightField.getText().trim(), weightField.getText().trim(), bloodField.getText().trim(), tempField.getText().trim()); 	    		    	       		    	    
+	    		    						heightField.getText().trim(), weightField.getText().trim(), bloodField.getText().trim(), tempField.getText().trim(), " "); 	    		    	       		    	    
 	    		    	    
 	    		    		if(!vaxSpace.getText().equalsIgnoreCase(""))
 	    		    		{
@@ -506,7 +506,7 @@ public class NursePortal extends Main{
 					newInCo.setText(p.getInsurCo());
 					newInNum.setText(p.getInsurNum());
 					newNurse.setText(p.getNurseName());	
-					if(patientTable.getItems().size() > 0)
+					if(patientTable.getSelectionModel().getSelectedItem() != null)
 					{
 						bp.setCenter(displayPatientInfo(p));
 					}
@@ -515,7 +515,7 @@ public class NursePortal extends Main{
 		});
 		
 		bp.setLeft(root);	
-		if(patientTable.getItems().size() > 0)
+		if(patientTable.getSelectionModel().getSelectedItem() != null)
 		{
 			bp.setCenter(displayPatientInfo(patientTable.getSelectionModel().getSelectedItem()));
 		}
@@ -614,26 +614,22 @@ public class NursePortal extends Main{
 		dnotes.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
 		dnotes.setEditable(false);
 		
-//		Text meds = new Text("Prescribed Medication: ");
-//		meds.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
-//		TextArea medsPrescribed = new TextArea();
-//		medsPrescribed.setEditable(false);
-//		medsPrescribed.setMinSize(550, 100);
-//		medsPrescribed.setMaxSize(550, 100);
-//		medsPrescribed.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
-//		for(int i = 0; i < patientSelected.getPrescriptions().size(); i++)
-//		{
-//			String tempStr[] =  patientSelected.getPrescriptions().get(i).getDate().split(" ");
-//			for(int j = 0; j <  patientSelected.getAptts().size(); j++)
-//			{
-//				if(patientSelected.getAptts().get(j).getDate().contains(tempStr[0]) && patientSelected.getAptts().get(j).getDate().compareTo(patientSelected.getPrescriptions().get(i).getDate()) < 0)
-//				{
-//					medsPrescribed.appendText(patientSelected.getPrescriptions().get(i).getType());
-//					medsPrescribed.appendText("\n\tDirections: " + patientSelected.getPrescriptions().get(i).getDir());
-//					medsPrescribed.appendText("\n\tStop Date: " + patientSelected.getPrescriptions().get(i).getStopDate() + "\n\n");
-//				}
-//			}
-//		}
+		Text meds = new Text("Prescribed Medication: ");
+		meds.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		TextArea medsPrescribed = new TextArea();
+		medsPrescribed.setEditable(false);
+		medsPrescribed.setMinSize(550, 100);
+		medsPrescribed.setMaxSize(550, 100);
+		medsPrescribed.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		for(int i = 0; i < patientSelected.getPrescriptions().size(); i++)
+		{
+			if(patientSelected.getPrescriptions().get(i).getDate().equalsIgnoreCase(appt.getPrescipTime()))
+			{
+				medsPrescribed.appendText(patientSelected.getPrescriptions().get(i).getType());
+				medsPrescribed.appendText("\n\tDirections: " + patientSelected.getPrescriptions().get(i).getDir());
+				medsPrescribed.appendText("\n\tStop Date: " + patientSelected.getPrescriptions().get(i).getStopDate() + "\n\n");
+			}
+		}
 		
 		Text vaxs = new Text("Vaccines Given: ");
 		vaxs.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
@@ -650,8 +646,7 @@ public class NursePortal extends Main{
 			}
 		}
 		
-		//holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, meds, medsPrescribed, vaxs, vaxPrescribed);
-		holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, vaxs, vaxPrescribed);
+		holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, meds, medsPrescribed, vaxs, vaxPrescribed);
 		return holder;
 	}
 	
