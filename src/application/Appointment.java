@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Appointment 
 {
+	
 	private String date;
 	private String reason;
 	private String height;
@@ -14,13 +15,21 @@ public class Appointment
 	private String doctorNotes;
 	private String nurseNotes;
 	
-	Appointment(){}
+	Appointment(){  
+		this.date = " ";
+		this.reason = " ";
+		this.doctorNotes = " ";
+		this.nurseNotes = " ";
+		this.height = " ";
+		this.weight = " ";
+		this.bloodPressure = " ";
+		this.temp = " ";
+	}
 	
 	public Appointment(LocalDateTime dateCreated, String reason, String docNotes, String nNotes, String hght, String wght, String bp, String temperature)
 	{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");  
 		this.date = dtf.format(dateCreated);
-
 		this.reason = reason;
 		this.doctorNotes = docNotes;
 		this.nurseNotes = nNotes;
@@ -29,6 +38,7 @@ public class Appointment
 		this.bloodPressure = bp;
 		this.temp = temperature;
 	}
+	
 	public String getDate()
 	{
 		return this.date;
@@ -39,12 +49,12 @@ public class Appointment
 		return this.reason;
 	}
 	
-	public String getDocNotes()
+	public String getDoctorNotes()
 	{
 		return this.doctorNotes;
 	}
 	
-	public String getNNotes()
+	public String getNurseNotes()
 	{
 		return this.nurseNotes;
 	}

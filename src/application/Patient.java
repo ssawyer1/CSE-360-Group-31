@@ -353,8 +353,8 @@ public class Patient
 			of.println("Height=" + appointments.get(i).getWeight());
 			of.println("BP=" + appointments.get(i).getBP());
 			of.println("Temp=" + appointments.get(i).getTemp());
-			of.println("DoctorNotes=" + appointments.get(i).getDocNotes());
-			of.println("NurseNotes=" + appointments.get(i).getNNotes());
+			of.println("DoctorNotes=" + appointments.get(i).getDoctorNotes());
+			of.println("NurseNotes=" + appointments.get(i).getNurseNotes());
 		}
 		
 		// immunizations
@@ -463,6 +463,8 @@ public class Patient
 					prescriptions.add(new Prescription());
 					prescriptions.get(i).setDate(loadProperty(bf, "Date"));
 					prescriptions.get(i).setType(loadProperty(bf, "Type"));
+					prescriptions.get(i).setDir(loadProperty(bf, "Directions"));
+					prescriptions.get(i).setStopDate(loadProperty(bf, "StopDate"));
 				}
 			}
 			bf.close();

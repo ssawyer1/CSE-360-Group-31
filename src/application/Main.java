@@ -17,6 +17,7 @@ public class Main extends Application
 		stage = primaryStage;
 		stage.setHeight(900);
 		stage.setWidth(1300);
+		stage.setResizable(false);
 		
 		home = new HomeScreen();
 		main = home.firstScreen(stage);

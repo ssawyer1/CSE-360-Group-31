@@ -9,21 +9,23 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
@@ -32,9 +34,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.*;
 public class PatientPortal extends Main
 {
-	protected Scene patientScene(Stage stage, Patient curPatient) 
+	private Patient curPatient;
+	
+	protected Scene patientScene(Stage stage, Patient CurPatient) 
 	{		
-
+		curPatient = CurPatient; 
 		//***********************MESSAGE PANE***********************
 		BorderPane msgPane = new BorderPane();
 		msgPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
@@ -77,27 +81,23 @@ public class PatientPortal extends Main
 		messageTable.getColumns().add(m_column2);
 		messageTable.getColumns().add(m_column3);
 		
-		//testing this example
-		curPatient.addDoctorMsg(LocalDateTime.now(), curPatient.getDoctorName(), "doctor", "bob smith");
-		curPatient.addNurseMsg(LocalDateTime.now(), "Sup", "nurse", "nancy smith");
-		
 		//traverse through doctors messages
 		for(Message m: curPatient.getDoctorMsg())
 		{
-			if(m.getSendName().equalsIgnoreCase(curPatient.getFullName()) == false) //only displaying incoming messages
-			{
+//			if(m.getSendName().equalsIgnoreCase(curPatient.getFullName()) == false) //only displaying incoming messages
+//			{
 				//add message to table
 				messageTable.getItems().add(m);
-			}
+//			}
 		}
 		//traverse through nurse messages
 		for(Message x: curPatient.getNurseMsgs())
 		{
-			if(x.getSendName().equalsIgnoreCase(curPatient.getFullName()) == false) //only displaying incoming messages
-			{
+//			if(x.getSendName().equalsIgnoreCase(curPatient.getFullName()) == false) //only displaying incoming messages
+//			{
 				//add message to table
 				messageTable.getItems().add(x);
-			}
+//			}
 		}
 		//sending messages section
 		Text to_msg = new Text("To:"); //Text on top
@@ -126,22 +126,29 @@ public class PatientPortal extends Main
 		errorMsg.setFont(Font.font("Courier", 15));
 		
 		
-		send.setOnMouseClicked(e -> 
+		send.setOnAction(new EventHandler<ActionEvent>()
 		{
-			if(e.getClickCount() >= 1)
+			public void handle(ActionEvent e)
 			{
 				String senderName = to.getText(); //extracting patient name and message content
 				String message = compose.getText();
 				int sent = 0;
 				if(senderName.equalsIgnoreCase(curPatient.getDoctorName()))
 				{
-						curPatient.addDoctorMsg(LocalDateTime.now(), message, "Patient", senderName);
-						sent = 1;
+					curPatient.addDoctorMsg(LocalDateTime.now(), message, "Patient", curPatient.getFullName());
+					messageTable.getItems().add(curPatient.getDoctorMsg().get(curPatient.getDoctorMsg().size()-1));
+					sent = 1;
+				}
+				else if(senderName.equalsIgnoreCase(curPatient.getNurseName()))
+				{
+					curPatient.addNurseMsg(LocalDateTime.now(), message, "Patient", curPatient.getFullName());
+					messageTable.getItems().add(curPatient.getNurseMsgs().get(curPatient.getNurseMsgs().size()-1));
+					sent = 1;
 				}
 				if(sent == 0)
 				{	
 					errorMsg.setFill(Color.DARKRED);
-					errorMsg.setText("Doctor not found");
+					errorMsg.setText("Doctor or Nurse not found");
 				}
 				else
 				{
@@ -149,28 +156,30 @@ public class PatientPortal extends Main
 					errorMsg.setText("Message Sucessfully Sent");
 					to.setText("Firstname Lastname");
 					compose.setText("Message Content");
-					
 				}
 			}
-		}
-		);
+		});
+		
+	
 
 		vbox.getChildren().addAll(inbox, messageTable, comp_msg, to_msg, to, compose, errorMsg);	
 
 		//******************VISITS PANE*********************
 		BorderPane vPane = new BorderPane();
-		vPane.setPadding(new Insets(0, 50, 50, 50)); 
+		vPane.setPadding(new Insets(10, 10, 10, 10)); 
 		vPane.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + ");");
 		
 		Text visits = new Text("Patient Vists"); 
 		visits.setFont(Font.font("Courier", FontWeight.BOLD, 30)); 
 		BorderPane.setAlignment(visits, Pos.CENTER);
-		BorderPane.setMargin(visits, new Insets(40, 0, 45, 0));
+		BorderPane.setMargin(visits, new Insets(30, 0, 30, 0));
 		vPane.setTop(visits); 
 		
 		TableView<Appointment> visitsTable = new TableView<Appointment>(); //create table
 		BorderPane.setAlignment(visitsTable, Pos.CENTER);
-		visitsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		//visitsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		visitsTable.setMaxSize(550, 550);
+		visitsTable.setMinSize(550, 550);
 		//add columns to table
 		TableColumn <Appointment, String> column1 = new TableColumn<>("Date");
 		column1.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -178,12 +187,6 @@ public class PatientPortal extends Main
 		column1.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.2));
 		column1.setResizable(false);
 		visitsTable.getColumns().add(column1);
-		
-		//curPatient.addAppointment(LocalDateTime.now(),"x","y","c","9","9","9","9");
-		/*ArrayList<Appointment> tempApt = curPatient.getAptts();
-		ObservableList<Appointment> obsApt = FXCollections.<Appointment>observableArrayList();
-		obsApt.addAll(tempApt);
-		visitsTable.setItems(obsApt);*/
 		
 		TableColumn <Appointment, String> column2 = new TableColumn<>("Description");
 		column2.setCellValueFactory(new PropertyValueFactory<>("reason"));
@@ -193,7 +196,7 @@ public class PatientPortal extends Main
 		visitsTable.getColumns().add(column2);
 		
 		TableColumn <Appointment, String> column3 = new TableColumn<>("Nurse Notes");
-		column3.setCellValueFactory(new PropertyValueFactory<>("notes"));
+		column3.setCellValueFactory(new PropertyValueFactory<>("nurseNotes"));
 		column3.setStyle("-fx-alignment: CENTER;");
 		column3.prefWidthProperty().bind(visitsTable.widthProperty().multiply(0.4));
 		column3.setResizable(false);	
@@ -208,16 +211,17 @@ public class PatientPortal extends Main
 				visitsTable.getItems().add(a);
 			}
 		}
-		//add immunizations to the table
-		/*ArrayList<Prescription> tempPre = curPatient.getPrescription();
-		ObservableList<Prescription> obsPre = FXCollections.<Prescription>observableArrayList();
-		obsPre.addAll(tempPre);
-		visitsTable.setItems(obsPre);*/
 		
-		//visitsTable.getItems().add(new Appointment("Date here", "Appointment description here", "Patient Notes Here"));
-		//visitsTable.getItems().add(new Appointment("Another date here", "Another appointment description here", "Additonal Patient Notes Here"));
+		visitsTable.setOnMouseClicked(e -> {
+			if (e.getClickCount() >= 1) {
+				if (visitsTable.getSelectionModel().getSelectedItem() != null) 
+				{
+					vPane.setCenter(getInfo(visitsTable.getSelectionModel().getSelectedItem()));
+				}
+			}		
+		});
 		
-		vPane.setCenter(visitsTable);
+		vPane.setLeft(visitsTable);
 		
 	    //*********************INFORMATION PANE*********************************
 		// create border pane
@@ -228,28 +232,44 @@ public class PatientPortal extends Main
 		Text contact = new Text("Contact Information"); // create title
 		contact.setFont(Font.font("Courier", FontWeight.BOLD, 30)); // set font
 		infoPane.setAlignment(contact, Pos.CENTER); // set alignment to the center
-		infoPane.setPadding(new Insets(40,0,0,0)); // pad
+		infoPane.setPadding(new Insets(30,0,0,0)); // pad
 		infoPane.setTop(contact); // set title at top of border pane
 		
 		// create text area to hold information
-		TextArea info = new TextArea(); // create
-		info.setFont(Font.font("Courier", 25)); // set font
-		String user = curPatient.getUsername();
-		curPatient.load("Patients/" + user + ".txt");
-		info.setText(curPatient.getFullName() + "\nAddress: " + curPatient.getPharm() + "\nMobile Phone: " + curPatient.getPhoneNum() + "\nEmail: " + curPatient.getEmail()); // set content
-		info.setEditable(false); // disallow edit
-		info.setMaxSize(550, 200); // set size
+		Text infoName = new Text("Name: " + curPatient.getFullName());
+		infoName.setFont(Font.font("Courier", 20)); // set font
+		
+		Text infoPharm = new Text("Pharmacy: " + curPatient.getPharm()); // create
+		infoPharm.setFont(Font.font("Courier", 20)); // set font
+		
+		Text infoPhone = new Text("Phone Number: " + curPatient.getPhoneNum()); // create
+		infoPhone.setFont(Font.font("Courier", 20)); // set font
+		
+		Text infoEmail = new Text("Email: " + curPatient.getEmail()); // create
+		infoEmail.setFont(Font.font("Courier", 20)); // set font
 		
 		// create edit contact title
-		Text edit = new Text("Edit Contact Information");
-		edit.setFont(Font.font("Courier", FontWeight.MEDIUM, 20)); // set font
+		Text edit = new Text("Edit Contact Information: ");
+		edit.setFont(Font.font("Courier", FontWeight.MEDIUM, 30)); // set font
 		
 		// create text areas for editable information
 		
-		TextArea name = new TextArea("Enter a new name");
-		TextArea address = new TextArea("Enter a new Address");
-		TextArea mobile = new TextArea("Enter a new phone number");
-		TextArea email = new TextArea("enter a new email");
+		Text nameQuery = new Text("Edit Name:");
+		nameQuery.setFont(Font.font("Courier", 15)); // set font
+		TextArea name = new TextArea();
+		
+		Text addrQuery = new Text("Edit Address:");
+		addrQuery.setFont(Font.font("Courier", 15)); // set font
+		TextArea address = new TextArea();
+		
+		Text phoneQuery = new Text("Edit Phone Number:");
+		phoneQuery.setFont(Font.font("Courier", 15)); // set font
+		TextArea mobile = new TextArea();
+		
+		Text emailQuery = new Text("Edit Email:");
+		emailQuery.setFont(Font.font("Courier", 15)); // set font
+		TextArea email = new TextArea();
+		
 		name.setMaxSize(400, 20);
 		address.setMaxSize(400, 20);
 		mobile.setMaxSize(400, 20);
@@ -265,48 +285,54 @@ public class PatientPortal extends Main
 		submit.setMaxSize(100, 20); // set size
 		submit.setStyle("-fx-background-radius: 5"); // round button edges
 		//if button is clicked update the patient info
-		submit.setOnMouseClicked(e-> 
+		submit.setOnAction(new EventHandler<ActionEvent>() 
 		{
 			//check that button was pressed once
-			if(e.getClickCount() >= 1)
+			public void handle(ActionEvent e)
 			{
 				//error catching to prevent repeats
-				if(name.getText().equals(curPatient.getFullName()))
+				if(!name.getText().equalsIgnoreCase(""))
 				{
-					error.setText("Name is already the same");
-				}
-				else if(address.getText().equals(curPatient.getPharm()))
-				{
-					error.setText("Address is already the same");
-				}
-				else if(mobile.getText().equals(curPatient.getPhoneNum()))
-				{
-					error.setText("Phone number is already the same");
-				}
-				else if(email.getText().equals(curPatient.getEmail()))
-				{
-					error.setText("Email is already the same");
-				}
-				//otherwise update the contact information
-				else
-				{
-					//set the content
-					info.setText(name.getText() + "\nAddress: " + address.getText() + "\nMobile Phone: " + mobile.getText() + "\nEmail: " + email.getText()); 
+					infoName.setText("Name: " + name.getText());
 					String tempName = name.getText();
 					String[] splitFullName = tempName.split("\\s+");
-					curPatient.setFName(splitFullName[0]);
-					curPatient.setLName(splitFullName[1]);
-					curPatient.setPharm(address.getText());
-					curPatient.setPhoneNum(mobile.getText());
-					curPatient.setEmail(email.getText());
-					//save updated info to file
-					try {
-						curPatient.save();
-					} catch (IOException x) {
-						// TODO Auto-generated catch block
-						x.printStackTrace();
+					if(splitFullName[0] != null)
+					{
+						curPatient.setFName(splitFullName[0]);
+					}
+					else
+					{
+						curPatient.setFName("");
+					}
+					if(splitFullName[1] != null)
+					{
+						curPatient.setLName(splitFullName[1]);
+					}
+					else
+					{
+						curPatient.setLName("");
 					}
 				}
+				if(!address.getText().equalsIgnoreCase(""))
+				{
+					infoPharm.setText("Pharmacy: " + address.getText());
+					curPatient.setPharm(address.getText());
+				}
+				if(!mobile.getText().equalsIgnoreCase(""))
+				{
+					infoPhone.setText("Phone Number: " + mobile.getText());
+					curPatient.setPhoneNum(mobile.getText());
+				}
+				if(!email.getText().equalsIgnoreCase(""))
+				{
+					infoEmail.setText("Email: " + email.getText());
+					curPatient.setEmail(email.getText());
+				}
+				//otherwise update the contact information				
+				name.clear();
+				address.clear();
+				mobile.clear();
+				email.clear();
 			}
 			
 		});
@@ -314,14 +340,13 @@ public class PatientPortal extends Main
 		
 		// create vbox to hold left information
 		VBox subLeft = new VBox();
-		subLeft.setSpacing(20); // spacing between objects in vbox
-		subLeft.getChildren().addAll(info,edit, name, address, mobile, email, submit, error); // add objects
-		subLeft.setAlignment(Pos.TOP_CENTER); // align at center
+		subLeft.setSpacing(10); // spacing between objects in vbox
+		subLeft.getChildren().addAll(infoName, infoPharm, infoPhone, infoEmail ,edit, nameQuery,name, addrQuery, address, phoneQuery, mobile, emailQuery, email, submit, error); // add objects
+		//subLeft.setAlignment(Pos.TOP_CENTER); // align at center
 		
 		// create hbox to hold left information and right picture
 		HBox infoBox = new HBox();
 		infoBox.getChildren().add(subLeft); // add object
-	    HBox.setHgrow(info, Priority.ALWAYS); 
 	    infoBox.setSpacing(50); // set spacing between Hbox objects
 	    infoBox.setStyle("-fx-padding: 50;"); // set background color
 	    
@@ -376,12 +401,198 @@ public class PatientPortal extends Main
 	    box.setAlignment(Pos.TOP_RIGHT);
 		VBox.setVgrow(tabPane, Priority.ALWAYS);
 		box.setStyle("-fx-background-color: rgb(" + 168 + "," + 198 + ", " + 250 + "); -fx-padding: 40;"); // set background of vbox
+
+		stage.setOnCloseRequest(event ->
+		{
+			try {
+				curPatient.save();
+			} catch (IOException x) {
+				// TODO Auto-generated catch block
+				x.printStackTrace();
+			}
+		});
 		
 		return new Scene(box);
   }
 	
+	private TabPane getInfo(Appointment appt)
+	{
+		Tab history = new Tab("Appintment History");
+		Tab prescrip = new Tab("Prescriptions");
+		Tab immun = new Tab("Immunizations");		
+		
+		ScrollPane scrollAppts = new ScrollPane();
+		scrollAppts.setStyle("-fx-background: white;"); // set background of vbox
+		scrollAppts.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+		scrollAppts.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		scrollAppts.setMaxSize(550,525);
+		scrollAppts.setMinSize(550,525);
+		scrollAppts.setPadding(new Insets(10,10,10,10));
+		
+		VBox holder = new VBox();
+		//holder.setPadding(new Insets(20,20,20,20));
+		holder.setSpacing(15);
+		
+		Text apptTitle = new Text("Appointment: " + appt.getDate());
+		apptTitle.setFont(Font.font("Courier", 20));
+		Text vitals = new Text("Vitals:");
+		vitals.setFont(Font.font("Courier", 15));
+		
+		Text height = new Text("Height: " + appt.getHeight());
+		height.setFont(Font.font("Courier", 15));
+		Text Weight = new Text("Weight: " + appt.getWeight());
+		Weight.setFont(Font.font("Courier", 15));
+		Text BP = new Text("Blood Pressure: " + appt.getBP());
+		BP.setFont(Font.font("Courier", 15));
+		Text temp = new Text("Temperature: " + appt.getTemp());
+		temp.setFont(Font.font("Courier", 15));
+		
+		GridPane grid = new GridPane();
+		grid.setVgap(15);
+		grid.setHgap(40);
+		grid.add(height, 0, 0);
+		grid.add(Weight, 0, 1);
+		grid.add(BP, 1, 0);
+		grid.add(temp, 1, 1);
+
+		Text n_notes = new Text("Nurse Notes: ");
+		n_notes.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		TextArea nnotes = new TextArea(appt.getNurseNotes());
+		nnotes.setMinSize(500, 100);
+		nnotes.setMaxSize(500, 100);
+		nnotes.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		nnotes.setEditable(false);
+		
+		Text d_notes = new Text("Doctor Notes: ");
+		d_notes.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		TextArea dnotes = new TextArea(appt.getDoctorNotes());
+		dnotes.setMinSize(500, 100);
+		dnotes.setMaxSize(500, 100);
+		dnotes.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		dnotes.setEditable(false);
+		
+//		Text meds = new Text("Prescribed Medication: ");
+//		meds.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+//		TextArea medsPrescribed = new TextArea();
+//		medsPrescribed.setEditable(false);
+//		medsPrescribed.setMinSize(500, 100);
+//		medsPrescribed.setMaxSize(500, 100);
+//		medsPrescribed.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+//		for(int i = 0; i < curPatient.getPrescriptions().size(); i++)
+//		{
+//			if(curPatient.getPrescriptions().get(i).getDate().equalsIgnoreCase(appt.getDate()))
+//			{
+//				medsPrescribed.appendText(curPatient.getPrescriptions().get(i).getType());
+//				medsPrescribed.appendText("\n\tDirections: " + curPatient.getPrescriptions().get(i).getDir());
+//				medsPrescribed.appendText("\n\tStop Date: " + curPatient.getPrescriptions().get(i).getStopDate() + "\n\n");
+//			}
+//		}
+		
+		Text vaxs = new Text("Vaccines Given: ");
+		vaxs.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		TextArea vaxPrescribed = new TextArea();
+		vaxPrescribed.setEditable(false);
+		vaxPrescribed.setMinSize(500, 100);
+		vaxPrescribed.setMaxSize(500, 100);
+		vaxPrescribed.setFont(Font.font("Courier", FontWeight.MEDIUM, 15));
+		for(int i = 0; i < curPatient.getImmunizations().size(); i++)
+		{
+			if(curPatient.getImmunizations().get(i).getDate().equalsIgnoreCase(appt.getDate()))
+			{
+				vaxPrescribed.appendText(curPatient.getImmunizations().get(i).getType() + "\n");
+			}
+		}
+		
+		//holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, meds, medsPrescribed, vaxs, vaxPrescribed);
+		holder.getChildren().addAll(apptTitle, vitals, grid, n_notes, nnotes, d_notes, dnotes, vaxs, vaxPrescribed);
+		scrollAppts.setContent(holder);
+		
+		TabPane newTabs = new TabPane();
+		newTabs.setMinSize(550, 550);
+		newTabs.setMaxSize(550, 550);
+		newTabs.getTabs().addAll(history, prescrip, immun);
+		newTabs.getStyleClass().add(TabPane.STYLE_CLASS_FLOATING); // set tab style to float
+		newTabs.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE); // don't allow tab closing
+		history.setContent(scrollAppts);
+		prescrip.setContent(scrollPrescrip(curPatient.getPrescriptions()));
+		immun.setContent(scrollImmun(curPatient.getImmunizations()));
+		
+		return newTabs;
+	}
+	
+	private ScrollPane scrollPrescrip(ArrayList<Prescription> prescrips)
+	{
+		ScrollPane scrollP = new ScrollPane();
+		scrollP.setStyle("-fx-background: white;"); // set background of vbox
+		scrollP.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scrollP.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		
+		VBox prescripHolder = new VBox();
+		prescripHolder.setStyle("-fx-background-color: white;"); // set background of vbox
+		prescripHolder.setPadding(new Insets(20, 20, 20, 20));
+		prescripHolder.setSpacing(20);
+		
+		Text p = new Text("Prescriptions: ");
+		prescripHolder.getChildren().add(p);
+		
+		for(int k = 0; k < prescrips.size(); k++)
+		{
+			VBox temp = new VBox();
+			temp.setSpacing(15);
+			
+			Text date = new Text("\n\tDate Prescribed: " +  prescrips.get(k).getDate());
+			Text type = new Text("\n\t\tPrescription Name: "+ prescrips.get(k).getType());
+			Text dir = new Text("\n\t\tDirections: "+ prescrips.get(k).getDir());
+			Text stopDate = new Text("\n\t\tStop Date: "+ prescrips.get(k).getStopDate());
+			
+			temp.getChildren().addAll(date, type, dir, stopDate);			
+			prescripHolder.getChildren().add(temp);
+		}
+		
+		scrollP.setContent(prescripHolder);
+		return scrollP;
+	}
+	
+	private ScrollPane scrollImmun(ArrayList<Immunization> shots)
+	{
+		ScrollPane scrollI = new ScrollPane();
+		
+		scrollI.setStyle("-fx-background: white;"); // set background of vbox
+		scrollI.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scrollI.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		
+		VBox immunHolder = new VBox();
+		immunHolder.setStyle("-fx-background-color: white;"); // set background of vbox
+		immunHolder.setPadding(new Insets(20, 20, 20, 20));
+		immunHolder.setSpacing(20);
+		
+		Text i = new Text("Immunizations: ");
+		immunHolder.getChildren().add(i);
+		
+		for(int k = 0; k < shots.size(); k++)
+		{
+			HBox temp = new HBox();
+			temp.setSpacing(15);
+			
+			Text date = new Text("\n\tDate Taken: " +  shots.get(k).getDate());
+			Text type = new Text("\n\t\tImmunization Name: "+ shots.get(k).getType());
+			
+			temp.getChildren().addAll(date, type);			
+			immunHolder.getChildren().add(temp);
+		}
+		
+		scrollI.setContent(immunHolder);
+		return scrollI;
+	}
+	
 	private void switchScenes(Stage stage)
 	{
+		try {
+			curPatient.save();
+		} catch (IOException x) {
+			// TODO Auto-generated catch block
+			x.printStackTrace();
+		}
 		HomeScreen home = new HomeScreen();
 		Scene h = home.firstScreen(stage);
 		stage.setScene(h);
