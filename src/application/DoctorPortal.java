@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import javafx.application.Application;
@@ -298,7 +299,16 @@ public class DoctorPortal extends Main{
 						if(recieverName.equalsIgnoreCase(p.getFullName()))
 							{
 								p.addDoctorMsg(now, message, "Doctor", senderName);
-								sent = 1;							
+								sent = 1;
+								 try 
+			    		    	    {
+			    		    	    	p.save();
+			    		    	    } 
+			    		    	    catch (IOException x) 
+			    		    	    {
+			    		    	    	// TODO Auto-generated catch block
+			    		    	    	x.printStackTrace();
+			    		    	    }
 							}
 					}
 				if(sent == 0)
