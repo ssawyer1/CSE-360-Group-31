@@ -36,5 +36,6 @@ BP=11/00
 Temp=100
 DoctorNotes= 
 NurseNotes=Notes
+PrescriptionDate= 
 ImmunizationNum=0
 PrescriptionNum=0
