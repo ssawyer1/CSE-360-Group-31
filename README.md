@@ -15,7 +15,9 @@ This is a medical database system for a pediatrics facility. Coded by Maya Eleff
 ![Patient Photos](https://github.com/ssawyer1/CSE-360-Group-31/blob/main/Pediatric%20GUI%20Photos/Photo10.JPG)
 ![Patient Photos](https://github.com/ssawyer1/CSE-360-Group-31/blob/main/Pediatric%20GUI%20Photos/Photo11.JPG)
 ![Patient Photos](https://github.com/ssawyer1/CSE-360-Group-31/blob/main/Pediatric%20GUI%20Photos/Photo12.JPG)
-
-
-
+# Admin Portal
+![Admin Photos](https://github.com/ssawyer1/CSE-360-Group-31/blob/main/Pediatric%20GUI%20Photos/Photo4.JPG)
+![Admin Photos](https://github.com/ssawyer1/CSE-360-Group-31/blob/main/Pediatric%20GUI%20Photos/Photo13.JPG)
+![Admin Photos](https://github.com/ssawyer1/CSE-360-Group-31/blob/main/Pediatric%20GUI%20Photos/Photo14.JPG)
+![Admin Photos](https://github.com/ssawyer1/CSE-360-Group-31/blob/main/Pediatric%20GUI%20Photos/Photo15.JPG)
 
